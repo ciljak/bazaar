@@ -1,5 +1,5 @@
 <!-- ******************************************************************* -->
-<!-- PHP "self" code handling submitting score into a chart              -->
+<!-- PHP "self" code handling adding item to sell by registered user     -->
 <!-- ******************************************************************* -->
 <!-- Vrsion: 1.0        Date: 27-XX.X.2020 by CDesigner.eu               -->
 <!-- ******************************************************************* -->
