@@ -105,6 +105,21 @@ h5 { /* e-mail*/
     border: 1px solid #2e2e2e;
    }
 
+   .price { /* p text in article of guestbook */
+    color: #ff0e0e;
+    font-size:18px;
+    padding: 15px;
+    
+   }
+
+   .item_name { /* p text in article of guestbook */
+    color: #3a3a3a;
+    font-size:18px;
+    font-weight: bold;
+    padding: 15px;
+    
+   }
+
 /* ************************************************ */
 /* Benchamrkchart first position list display       */
 /* ************************************************ */ 

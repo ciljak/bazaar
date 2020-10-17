@@ -18,62 +18,7 @@
 	
 
 
-	// If category data was submitted
-	if(filter_has_var(INPUT_POST,'categorysubmit')){
-		// Data obtained from $_postmessage are assigned to local variables
-        $category = htmlspecialchars($_POST['category']);
-        
-		// echo "$category in category debug ";
-		
-		
-
-		// Controll if all required fields was written
-		if(!empty($category) ){
-			
-            // add category into a databse - there will by fields without subcategory but they will by omited for showing
-
-			// make database connection
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
-
-			// Check connection
-				if($dbc === false){
-					die("ERROR: Could not connect to database. " . mysqli_connect_error());
-				}
-			
-			
-			   
-
-			   // create INSERT query
-			   $sql = "INSERT INTO bazaar_category (category) 
-						VALUES ('$category')";
-
-
-
-				if(mysqli_query($dbc, $sql)){
-					
-					$msg = 'New category' . $category . 'sucesfully added into a bazaar_category table.';
-					$msgClass = 'alert-success';
-
-					// clear entry fileds after sucessfull deleting from database
-					$category= "";
-                   
-                    $is_result = false; //before hitting submit button no result is available
-				} else{
-					
-					$msg = "ERROR: Could not able to execute $sql. " . mysqli_error($dbc);
-					$msgClass = 'alert-danger';
-				}
-
-			// end connection
-				mysqli_close($dbc);
-
-			}
-			
-		} else {
-			// Failed - if not all fields are fullfiled
-			$msg = 'Please fill in all * marked contactform fields';
-			$msgClass = 'alert-danger'; // bootstrap format for allert message with red color
-        };
+	
         
     // If category with subcategory data was submitted
 	if(filter_has_var(INPUT_POST,'subcategorysubmit')){
@@ -140,15 +85,7 @@
   
 	
 
-	// if reset button clicked
-	if(filter_has_var(INPUT_POST, 'reset')){
-		$msg = '';
-		$msgClass = ''; // bootstrap format for allert message with red color
-		$category ='';
-		$subcategory ='';
-       
-		
-	};
+	
 		
 ?>
 
@@ -184,17 +121,7 @@
         <img id="calcimage" src="./images/addicon.png" alt="Calc image" width="150" height="150">
         <br>
 
-      <form  method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-         
-         <legend> Create new category </legend>
-	      <div class="form-group">
-		      <label>* Set name for new category:</label>
-		      <input type="text" onfocus="this.value='<?php echo isset($_POST['category']) ? $category : ''; ?>'" name="category" class="form-control" value="<?php echo isset($_POST['category']) ? $category : 'Please provide name of new category'; ?>">
-              <br>
-              <button type="submit" name="categorysubmit" class="btn btn-warning"> Create new category </button>		  
-	      </div>
-          <hr>        	 
-          </form> 
+     
           
           <form  method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
           <div class="form-group">
@@ -204,15 +131,52 @@
               <label>* Select main category for nesting created subcategory:</label>
 		      <input list="category" name="category" >
                 <datalist id="category">
-                    <?php // here read data from mysql bazaar_category and display existing category whre subcategory will be nested
+					<?php // here read data from mysql bazaar_category and display existing category whre subcategory will be nested
+					 	$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
+
+						    // Check connection
+							 if($dbc === false){
+								 die("ERROR: Could not connect to database. " . mysqli_connect_error());
+							 };
+						 
+						 
+							
+			 
+							// create SELECT query for category names from database
+							$sql = "SELECT DISTINCT category FROM bazaar_category ORDER BY category ASC";
+
+							// execute sql and populate data list with existing category in database
+							if($output = mysqli_query($dbc, $sql)){
+								if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
+									
+									while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
+									
+											echo "<option value=" . $row['category'] . ">";
+											
+											
+									
+									}
+									
+									// Free result set
+									mysqli_free_result($output);
+								} else{
+									echo "There is no category in category table. Please wirite one."; // if no records in table
+								}
+							} else{
+								echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+							}
+
+			 
+			                // Close connection
+                            mysqli_close($dbc);
                     ?>
-                    <option value="autos">
-                    <option value="pc">
-                    <option value="electronic">
+                   
                     
                 </datalist>
               <br> 
-              <button type="submit" name="subcategorysubmit" class="btn btn-warning"> Create new subcategory </button>			  
+			  
+              <button type="submit" name="subcategorysubmit" class="btn btn-warning"> Create new subcategory </button>
+			  <input type="reset" class="btn btn-info" value="Reset">			  
 	      </div>
           <hr> 
           </form> 
@@ -220,10 +184,9 @@
 		  
 
 		  
-		  <!-- remove comment after implementation
-		  <button type="submit" name="delete" class="btn btn-danger"> Delete recently posted score </button>
-          -->
-		  <button type="submit" name="reset" class="btn btn-info"> Reset forms </button>
+		  
+		  
+		  
           <br><br>
 		  
 		  
@@ -281,7 +244,10 @@ echo "<br>"; echo "<br>";
                 echo "<tr>";
                     echo "<th>subcategory_id</th>";
                     echo "<th>category</th>";
-                    echo "<th>subcategory</th>";
+					echo "<th>subcategory</th>";
+					echo "<th></th>";
+					echo "<th>delete category</th>";
+                    
                     
                     
                     
@@ -291,7 +257,15 @@ echo "<br>"; echo "<br>";
                 echo "<tr>";
                     echo "<td>" . $row['subcategory_id'] . "</td>";
                     echo "<td>" . $row['category'] . "</td>";
-                    echo "<td>" . $row['subcategory'] . "</td>";
+					echo "<td>" . $row['subcategory'] . "</td>";
+					 // removal line with removing link line
+                
+					 
+					 echo "<td  colspan=\"1\"> Manage entry: </td>"; // description on first line
+						 echo '<td colspan="1"><a id="DEL" href="removecategory.php?subcategory_id='.$row['subcategory_id'] . '&amp;category='
+						 . $row['category'] . '&amp;subcategory='. $row['subcategory'] .'"> >> Remove  </a></td></tr>'; //construction of GETable link
+						 // for removecategory.php input
+					
                     
                 echo "</tr>";
                 echo " </div> " ;
