@@ -28,6 +28,14 @@
 
 }
 
+#container_1060 { /* wider container for admin page or where it is needed */
+  width: 1060px;
+  margin-left: 240px;
+  border: dotted 1px gray;
+  background-color: #cfffc6;
+
+}
+
 /* add margin to both sides in calculator input fields */
 .inputSelector {
     margin-left: 20px;
@@ -140,7 +148,7 @@ h5 { /* e-mail*/
  }
 
  #gray_under_picture {
-  background-color: rgb(88, 88, 88);
+  background-color: rgb(148, 148, 148);
   text-align: center;
  }
 
@@ -155,6 +163,13 @@ h5 { /* e-mail*/
 /* ************************************************ */
 /* Subscribers table formating                      */
 /* ************************************************ */
+
+
+table { /* header of table */
+  margin-left:auto;
+  margin-right:auto;
+
+   } 
 
 th { /* header of table */
   padding: 1px 10px 1px 10px;

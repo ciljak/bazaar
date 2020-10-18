@@ -133,7 +133,7 @@
         </div>
       </div>
     </nav>
-    <div class="container" id="formcontainer">	
+    <div class="container" id="container_1060">	
 		
     	
 	  <?php if($msg != ''): ?>
@@ -148,7 +148,7 @@
       
 	      <div class="form-group">
 		  <label>* Select category-subcategory of product for salle:</label>
-		  <input list="category_subcategory" name="category_subcategory" >
+		  <input list="category_subcategory" name="category_subcategory" placeholder="please select">
                 <datalist id="category_subcategory"> <!-- must be converted in subcategory_id in script - marked with (*) -->
 					<?php // here read data from mysql bazaar_category and display existing category whre subcategory will be nested
 					 	$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
@@ -254,7 +254,7 @@
 								
 										
 							// read all rows (data) from guestbook table in "test" database
-							$sql = "SELECT * FROM bazaar_item WHERE subcategory_id = "."'$subcategory_id'"." ORDER BY item_id DESC";  // read in reverse order of score - highest score first
+							$sql = "SELECT * FROM bazaar_item WHERE published="."'1'"." AND subcategory_id = "."'$subcategory_id'"." ORDER BY item_id DESC";  // read in reverse order of score - highest score first
 							/*************************************************************************/
 							/*  Output in Table - solution 1 - for debuging data from database       */
 							/*************************************************************************/
@@ -271,24 +271,26 @@
 										// create table output
 										echo "<table>"; //head of table
 											echo "<tr>";
-												echo "<th>id</th>";
+												//echo "<th>id</th>";
 												echo "<th>Name</th>";
 												echo "<th>Price</th>";
 												echo "<th>Category</th>";
 												echo "<th>Screenshot1</th>";
+												echo "<th>More info</th>";
 												
 												
 											echo "</tr>";
 										while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
 											echo " <div class=\"mailinglist\"> " ;
 											echo "<tr>";
-												echo "<td>" . $row['item_id'] . "</td>";
+												//echo "<td>" . $row['item_id'] . "</td>";
 												echo "<td class=\"item_name\">" . $row['name_of_item'] . "</td>";
-												echo "<td class=\"price\">" . $row['price_eur'] . "</td>";
+												echo "<td class=\"price\">" . $row['price_eur'] . " € </td>";
 												echo "<td>" . $category."/".$subcategory."</td>";
 												
-												$image_location = IMAGE_PATH.$row['screenshot1'];
-													echo "<td> <img src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"95\"> </td>"; 
+													$image_location = IMAGE_PATH.$row['screenshot1'];
+												echo "<td id=\"gray_under_picture\"> <img src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"250\"> </td>"; 
+												echo '<td colspan="1"><a id="DEL" href="item.php?item_id='.$row['item_id']. '"> >> Visit item page  </a></td></tr>'; //construction of GETable link
 											echo "</tr>";
 											echo " </div> " ;
 										}
@@ -320,11 +322,12 @@ if($dbc === false){
     die("ERROR: Could not connect to database - stage of article listing. " . mysqli_connect_error());
 }
 
-
+               
+					
     
             
 // read all rows (data) from guestbook table in "test" database
-$sql = "SELECT * FROM bazaar_item ORDER BY item_id DESC LIMIT 5";  // read in reverse order of score - highest score first
+$sql = "SELECT * FROM bazaar_item WHERE published="."'1'"." ORDER BY item_id DESC LIMIT 5";  // read in reverse order of score - highest score first
 /*************************************************************************/
 /*  Output in Table - solution 1 - for debuging data from database       */
 /*************************************************************************/
@@ -336,41 +339,78 @@ echo "<br>";
 
 echo "<br>"; echo "<br>";
 
-    if($output = mysqli_query($dbc, $sql)){
-        if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
-            // create table output
-            echo "<table>"; //head of table
-                echo "<tr>";
-                    echo "<th>id</th>";
-                    echo "<th>Name</th>";
-                    echo "<th>Price</th>";
-                    echo "<th>Category</th>";
-                    echo "<th>Screenshot1</th>";
-                    
-                    
-                echo "</tr>";
-            while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
-                echo " <div class=\"mailinglist\"> " ;
-                echo "<tr>";
-                    echo "<td>" . $row['item_id'] . "</td>";
-                    echo "<td class=\"item_name\">" . $row['name_of_item'] . "</td>";
-                    echo "<td class=\"price\">" . $row['price_eur'] . " € </td>";
-					echo "<td>" . $row['subcategory_id'] . "</td>";
-                    $image_location = IMAGE_PATH.$row['screenshot1'];
-                        echo "<td> <img src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"95\"> </td>"; 
-                echo "</tr>";
-                echo " </div> " ;
-            }
-            echo "</table>";
-            // Free result set
-            mysqli_free_result($output);
-        } else{
-            echo "There is no item for sell. Please add one."; // if no records in table
-        }
-    } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
-    }
+if($output = mysqli_query($dbc, $sql)){
+	if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
+		// create table output
+		echo "<table>"; //head of table
+			echo "<tr>";
+				//echo "<th>id</th>";
+				echo "<th>Name</th>";
+				echo "<th>Price</th>";
+				echo "<th>Category</th>";
+				echo "<th>Screenshot1</th>";
+				echo "<th>More info</th>";
+				
+				
+			echo "</tr>";
+		while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
+			echo " <div class=\"mailinglist\"> " ;
+			echo "<tr>";
+				//echo "<td>" . $row['item_id'] . "</td>";
+				echo "<td class=\"item_name\">" . $row['name_of_item'] . "</td>";
+				echo "<td class=\"price\">" . $row['price_eur'] . " € </td>";
 
+							/* convert category_id in to category and subcategory */
+							$subcategory_id = $row['subcategory_id'];
+							$category_idsupl	= "" ;
+							$subcategory_idsupl	= "" ;
+							// (*) -- conversion of category and subcategory into category%id
+								
+								// create SELECT query for category and subcategory names from database
+								$sql_supl = "SELECT category, subcategory FROM bazaar_category WHERE subcategory_id = "."'$subcategory_id'" ;
+								/*$output_supl = mysqli_query($dbc, $sql_supl);
+								$row_supl = mysqli_fetch_array($output_supl);
+								$category_id	= $row_supl['category'] ;
+								$subcategory_id	= $row_supl['subcategory'] ;
+								echo "<td>" . $category_id."/".$subcategory_id."</td>";*/
+								// execute sql and populate data list with existing category in database
+								if($output_supl = mysqli_query($dbc, $sql_supl)){
+									if(mysqli_num_rows($output_supl) > 0){  // if any record obtained from SELECT query
+										while($row_supl = mysqli_fetch_array($output_supl)){ //next rows outputed in while loop
+											
+											$category_idsupl	= $row_supl['category'] ;
+											$subcategory_idsupl	= $row_supl['subcategory'] ;
+											
+												
+										}
+										
+										
+										// Free result set
+										mysqli_free_result($output_supl);
+									} else {
+										echo "There is no souch category-subcategory in category table. Please correct your error."; // if no records in table
+									}
+								} else{
+									echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+								}
+
+				echo "<td>" . $category_idsupl."/".$subcategory_idsupl."</td>";
+				
+				    $image_location = IMAGE_PATH.$row['screenshot1'];
+				echo "<td id=\"gray_under_picture\"> <img  src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"250\"> </td>"; 
+				echo '<td colspan="1"><a id="DEL" href="item.php?item_id='.$row['item_id']. '"> >> Visit item page  </a></td></tr>'; //construction of GETable link
+			echo "</tr>";
+			echo " </div> " ;
+		}
+		echo "</table>";
+		// Free result set
+		mysqli_free_result($output);
+	} else{
+		echo "There is no item for sell. Please add one."; // if no records in table
+	}
+} else{
+	echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+}
 
 
 // Close connection

@@ -1,28 +1,32 @@
 <!-- ******************************************************************* -->
-<!-- PHP "self" code handling administration of bazaar app               -->
+<!-- PHP "self" code handling managenet of bazaar portal                 -->
 <!-- ******************************************************************* -->
-<!-- Vrsion: 1.0        Date: 27-XX.X.2020 by CDesigner.eu               -->
+<!-- Vrsion: 1.0        Date: 18.10-XX.X.2020 by CDesigner.eu            -->
 <!-- ******************************************************************* -->
 
-<?php // leading part of page for simple header securing and basic variable setup
+<?php
     require_once('appvars.php'); // including variables for database
-  
 	// two variables for message and styling of the mesage with bootstrap
 	$msg = '';
 	$msgClass = '';
 
 	// default values of auxiliary variables
-		
+	$category = "";
+	$subcategory = "";
+	
+	$is_result = false; //before hitting submit button no result is available
+	
+	
 		
 ?>
 
-<!-- ******************************************* -->
-<!-- HTML code for benchmarkchart administration -->
-<!-- ******************************************* -->
+<!-- **************************************** -->
+<!-- HTML code containing Form for submitting -->
+<!-- **************************************** -->
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Benchmark - admin  </title>
+	<title> bazaar - page administration </title>
 	<link rel="stylesheet" href="./css/bootstrap.min.css"> <!-- bootstrap mini.css file -->
 	<link rel="stylesheet" href="./css/style.css"> <!-- my local.css file -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
@@ -33,27 +37,55 @@
 	<nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">    
-          <a class="navbar-brand" href="admin.php">3dmark results chart v 1.0 - admin section</a>
-          <a class="navbar-brand" href="index.php"> --> return to main score page</a>
+          <a class="navbar-brand" href="index.php">Bazaar - page administration</a>
         </div>
       </div>
     </nav>
-    <div class="container" id="formcontainer">	
+    <div class="container" id="container_1060">	<!-- wider container for admin page - width 1060px - styled in style.css-->
 		
     	
-	  <?php if($msg != ''): ?> <!-- alert showing part -->
+	  <?php if($msg != ''): ?>
     		<div class="alert <?php echo $msgClass; ?>"><?php echo $msg; ?></div>
       <?php endif; ?>	
         
-      <br> <!-- logo on the center of the page -->
-        <img id="calcimage" src="./images/admin.jpg" alt="Calc image" width="150" height="150">
-      <br>
+        <br> 
+        <img id="calcimage" src="./images/admin.png" alt="adminimage" width="150" height="150">
+        <br>
 
-       
-            
+     
+          
+         
+         	 
+		  
+
+		  
+		  
+		  
+		  
+          <br><br>
+		  
+		  
+		  <?php   //part displaying info after succesfull added subscriber into a mailinglist
+				 if ($is_result ) {
+					
+
+						echo "<br> <br>";
+						echo " <table class=\"table table-success\"> ";
+						echo " <tr>
+                               <td><h5> <em> Category: </em> $category with subcategory $subcategory </h5> <h5> has been succesfully added to category list </h5> ";
+                                  
+						
+						  
+						echo "	   <td>   </tr> "; 
+						echo " </table> ";
+					
+					//echo " <input type="text" id="result_field" name="result_field" value="$result"  >  <br>" ;
+				} ; 
+				 ?>
+                 <br>
+		
+	  </form>
       <?php // code showing all subscribers in form of a table at end of the page
-
-      
 
 /* Attempt MySQL server connection. Assuming you are running MySQL
 server with default setting (user 'root' with no password) */
@@ -63,20 +95,19 @@ $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
 if($dbc === false){
     die("ERROR: Could not connect to database - stage of article listing. " . mysqli_connect_error());
 }
-
-
-    
-            
+// ----------------------------------------------------------------------------------- SHOWING ADMIN TABLES ----------------------------------
+/********************************************************************************************/
+/* I. Showing items for publish/unpublish and delete table with option for removal          */
+/********************************************************************************************/   
+// querying bazaar_category for listed category items            
 // read all rows (data) from guestbook table in "test" database
-$sql = "SELECT * FROM benchmark_chart ORDER BY score DESC";  // read in reverse order of score - highest score first
-/*************************************************************************/
-/*  Output in Table - solution 1 - for debuging data from database       */
-/*************************************************************************/
-// if data properly selected from guestbook database tabele
+$sql = "SELECT * FROM bazaar_item ORDER BY item_add_date DESC";  // read in reverse order of score - highest score first
 
-echo "<h4>Administration of benchmark result posts</h4>";
+// processing table output form bazaar_category
+echo "<h4>I. Manage list of items for sell </h4>";
 echo "<br>";
-//echo ' <button class="btn btn-secondary btn-lg " onclick="location.href=\'unsubscribe.php\'" type="button">  Unsubscribe by e-mail -> </button>';
+// buttons for access to other pages
+echo ' <button class="btn btn-secondary btn-lg " onclick="location.href=\'sellitem.php\'" type="button">  Create new item page -> </button>';
 
 echo "<br>"; echo "<br>";
 
@@ -85,35 +116,153 @@ echo "<br>"; echo "<br>";
             // create table output
             echo "<table>"; //head of table
                 echo "<tr>";
-                    echo "<th>id</th>";
-                    echo "<th>score</th>";
-                    echo "<th>nickname</th>";
-                    echo "<th>date of post</th>";
-                    echo "<th>screenshot</th>";
+                    echo "<th>item_id</th>";
+                    echo "<th>name</th>";
+                    echo "<th>published?</th>";
+                    echo "<th>date</th>";
+
+					echo "<th>price</th>";
+					echo "<th>category id</th>";
+                    echo "<th>photo 1</th>";
+                    echo "<th>photo 2</th>";
+                    echo "<th>photo 3</th>";
+                    echo "<th colspan=\"2\">Manage</th>";
+                    
+                    
                     
                     
                 echo "</tr>";
             while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
                 echo " <div class=\"mailinglist\"> " ;
                 echo "<tr>";
-                    echo "<td>" . $row['id'] . "</td>";
-                    echo "<td>" . $row['score'] . "</td>";
-                    echo "<td>" . $row['nickname'] . "</td>";
-                    echo "<td>" . $row['write_date'] . "</td>";
-                    $image_location = IMAGE_PATH.$row['screenshot'];
-                        echo "<td> <img src=\"$image_location\" alt=\" score image \"  height=\"95\"> </td>"; 
-                echo "</tr>";
+                    echo "<td>" . $row['item_id'] . "</td>";
+                    echo "<td>" . $row['name_of_item'] . "</td>";
+                    if ($row['published']) { // show if published - set 1 or waiting set to 0
+                        echo "<td> ok-Published </td>";
+                    } else {
+                        echo "<td> X-waiting </td>";
+                    }
+                    
+                    echo "<td>" . $row['item_add_date'] . "</td>";
 
-                // removal line with removing link line
+                    echo "<td>" . $row['price_eur'] . " € </td>";
+                   // echo "<td>" . $row['subcategory_id'] . "</td>";
+                                /* convert category_id in to category and subcategory */
+                                            $subcategory_id = $row['subcategory_id'];
+                                            $category_idsupl	= "" ;
+                                            $subcategory_idsupl	= "" ;
+                                            // (*) -- conversion of category and subcategory into category%id
+                                                
+                                                // create SELECT query for category and subcategory names from database
+                                                $sql_supl = "SELECT category, subcategory FROM bazaar_category WHERE subcategory_id = "."'$subcategory_id'" ;
+                                                /*$output_supl = mysqli_query($dbc, $sql_supl);
+                                                $row_supl = mysqli_fetch_array($output_supl);
+                                                $category_id	= $row_supl['category'] ;
+                                                $subcategory_id	= $row_supl['subcategory'] ;
+                                                echo "<td>" . $category_id."/".$subcategory_id."</td>";*/
+                                                // execute sql and populate data list with existing category in database
+                                                if($output_supl = mysqli_query($dbc, $sql_supl)){
+                                                    if(mysqli_num_rows($output_supl) > 0){  // if any record obtained from SELECT query
+                                                        while($row_supl = mysqli_fetch_array($output_supl)){ //next rows outputed in while loop
+                                                            
+                                                            $category_idsupl	= $row_supl['category'] ;
+                                                            $subcategory_idsupl	= $row_supl['subcategory'] ;
+                                                            
+                                                                
+                                                        }
+                                                        
+                                                        
+                                                        // Free result set
+                                                        mysqli_free_result($output_supl);
+                                                    } else {
+                                                        echo "There is no souch category-subcategory in category table. Please correct your error."; // if no records in table
+                                                    }
+                                                } else{
+                                                    echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+                                                }
+
+                                echo "<td>" . $category_idsupl."/".$subcategory_idsupl."</td>";
+
+
+                    $image_location = IMAGE_PATH.$row['screenshot1'];
+                    echo "<td id=\"gray_under_picture\"> <img src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"95\"> </td>"; 
+                    $image_location = IMAGE_PATH.$row['screenshot2'];
+                    echo "<td id=\"gray_under_picture\"> <img src=\"$image_location\" alt=\" screenshot of product second \"  height=\"95\"> </td>"; 
+                    $image_location = IMAGE_PATH.$row['screenshot3'];
+                    echo "<td id=\"gray_under_picture\"> <img src=\"$image_location\" alt=\" screenshot of product third \"  height=\"95\"> </td>"; 
+
+					 // removal line with removing link line
                 
-                echo "<tr>";
-                echo "<td  colspan=\"3\"> Manage content: </td>"; // description on first line
-                    echo '<td colspan="2"><a id="DEL" href="remove.php?id='.$row['id'] . '&amp;score='
-                    . $row['score'] . '&amp;nickname='. $row['nickname'] . '&amp;write_date='
-                    . $row['write_date'] . '&amp;screenshot='. $row['screenshot'] .'"> DEL - Remove score </a></td></tr>'; //construction of GETable link
-                    // for remove.php input
+					 
+					// echo "<td  colspan=\"1\"> Manage entry: </td>"; // description on first line
+						 echo '<td colspan="1"><a id="DEL" href="removeitem.php?item_id='.$row['item_id'] . '&amp;name_of_item='
+                         . $row['name_of_item'] . '&amp;price_eur='. $row['price_eur'] .
+                         '&amp;published='. $row['published'] . '&amp;screenshot1='. $row['screenshot1'] .
+                         '&amp;screenshot2='. $row['screenshot2'] . '&amp;screenshot3='. $row['screenshot3'] . '"> >>Publish/UnPub./Remove  </a></td></tr>'; //construction of GETable link
+						 // for removecategory.php input
+					
+                    
                 echo "</tr>";
+                echo " </div> " ;
+            }
+            echo "</table>";
+            echo "<br>";
+            echo "<hr>";
+            // Free result set
+            mysqli_free_result($output);
+        } else{
+            echo "There is no benchmark result in chart. Please wirite one."; // if no records in table
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+    }
 
+
+/*************************************************************************/
+/*  II. Showing category/ subcategory table with option for removal          */
+/*************************************************************************/   
+// querying bazaar_category for listed category items            
+// read all rows (data) from guestbook table in "test" database
+$sql = "SELECT * FROM bazaar_category ORDER BY category ASC, subcategory ASC";  // read in reverse order of score - highest score first
+
+// processing table output form bazaar_category
+echo "<h4>II. Manage List of active categories and subcategories on store</h4>";
+echo "<br>";
+echo ' <button class="btn btn-secondary btn-lg " onclick="location.href=\'managecategory.php\'" type="button">  Create new category-subcategory -> </button>';
+
+echo "<br>"; echo "<br>";
+
+    if($output = mysqli_query($dbc, $sql)){
+        if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
+            // create table output
+            echo "<table>"; //head of table
+                echo "<tr>";
+                    echo "<th>subcategory_id</th>";
+                    echo "<th>category</th>";
+					echo "<th>subcategory</th>";
+					echo "<th></th>";
+					echo "<th>delete category</th>";
+                    
+                    
+                    
+                    
+                echo "</tr>";
+            while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
+                echo " <div class=\"mailinglist\"> " ;
+                echo "<tr>";
+                    echo "<td>" . $row['subcategory_id'] . "</td>";
+                    echo "<td>" . $row['category'] . "</td>";
+					echo "<td>" . $row['subcategory'] . "</td>";
+					 // removal line with removing link line
+                
+					 
+					 echo "<td  colspan=\"1\"> Manage entry: </td>"; // description on first line
+						 echo '<td colspan="1"><a id="DEL" href="removecategory.php?subcategory_id='.$row['subcategory_id'] . '&amp;category='
+						 . $row['category'] . '&amp;subcategory='. $row['subcategory'] .'"> >> Remove  </a></td></tr>'; //construction of GETable link
+						 // for removecategory.php input
+					
+                    
+                echo "</tr>";
                 echo " </div> " ;
             }
             echo "</table>";

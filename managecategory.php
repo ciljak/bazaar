@@ -233,7 +233,7 @@ $sql = "SELECT * FROM bazaar_category ORDER BY category ASC, subcategory ASC";  
 
 echo "<h4>List of active categories and subcategories</h4>";
 echo "<br>";
-//echo ' <button class="btn btn-secondary btn-lg " onclick="location.href=\'unsubscribe.php\'" type="button">  Unsubscribe by e-mail -> </button>';
+echo ' <button class="btn btn-secondary btn-lg " onclick="location.href=\'admin.php\'" type="button">  admin page -> </button>';
 
 echo "<br>"; echo "<br>";
 
