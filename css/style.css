@@ -196,3 +196,28 @@ th { /* header of table */
 .btn { /* adding space between buttons */
     margin-left: 25px;
     }
+/* ************************************************ */
+/* Login additional formattng                    */
+/* ************************************************ */
+
+
+   
+
+#login {
+    padding: 10px;
+    background-color: rgb(227, 255, 185) ;
+    border: 1px dotted #616161 ;
+  
+
+}
+
+#loginsubmitt {
+ margin-top: 10px;
+ margin-bottom: 10px;
+ justify-self: center;
+  
+
+
+}
+
+  

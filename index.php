@@ -128,8 +128,18 @@
 <body>
 	<nav class="navbar navbar-default">
       <div class="container">
-        <div class="navbar-header">    
-          <a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>
+        <div class="navbar-header">   
+		<?php // generate menu if user is loged in or not
+		  if(isset($_COOKIE['username'])) { // loged in user
+			 echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
+			 echo '<a class="navbar-brand" href="editprofile.php"> Edit profile </a>';
+			 echo '<a class="navbar-brand" href="logout.php"> Logout </a>';
+	      } else { // visitor without login
+			echo '<a class="navbar-brand" href="login.php"> Log In </a>';
+			echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';
+		 }
+		?>	 
+         
         </div>
       </div>
     </nav>
