@@ -6,6 +6,7 @@
 
 <?php
  require_once('appvars.php'); // including variables for database
+ session_start(); // start the session
    
  // two variables for message and styling of the mesage with bootstrap
  $msg = '';
@@ -14,7 +15,8 @@
  $usr_passwd = '';
 
 //get info that user is loged in, if not try it looking at cookies
-if(!isset($_COOKIE['user_id'])) {
+//if(!isset($_COOKIE['s'])) { old solution with cookies
+  if(!isset($_SESSION['users_id'])) { //new with session variables
     if(isset($_POST['submit'])) {
         /* Attempt MySQL server connection.  */
              $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
@@ -36,20 +38,26 @@ if(!isset($_COOKIE['user_id'])) {
               if(mysqli_num_rows($data) == 1) {
                   // login is ok, set user  ID and username cookies and redirect to the homepage
                   $row = mysqli_fetch_array($data);
-                  setcookie('user_id', $row['user_id']);
-                  setcookie('username', $row['username']);
+                  //setcookie('users_id', $row['users_id']); old solution with cookies
+                  //setcookie('username', $row['username']);
+                  $_SESSION['users_id'] = $row['users_id']; // sloution with sessions
+                  $_SESSION['username'] = $row['username'];
+                  // new cookies for login persistency that expires after 30 days without logout combination SESSION with COOKIES is awailable
+                  setcookie('users_id', $row['users_id'], time()+(60+60*24*30));
+                  setcookie('username', $row['username'], time()+(60+60*24*30));
+
                   $home_url = 'http://'. $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
                   header('Location:'. $home_url);
 
                   // Free result set
-				  mysqli_free_result($data);
+				          mysqli_free_result($data);
                   // Close connection
                   mysqli_close($dbc);
 
               } else  {
                   // urename/ password are incorrect - error meesage is displayed
                   $msg = "Incorrect username or password. Login denied!  ";
-				  $msgClass = 'alert-danger';
+				          $msgClass = 'alert-danger';
    
             }     
 
@@ -57,7 +65,7 @@ if(!isset($_COOKIE['user_id'])) {
             } else {
                 // username/ password were not entered - display error message
                 $msg = "Sorry, you must eneter username and password to log in. ";
-				$msgClass = 'alert-danger';
+			        	$msgClass = 'alert-danger';
    
             }     
     }  
@@ -88,12 +96,17 @@ if(!isset($_COOKIE['user_id'])) {
       </div>
     </nav>
     <div class="container" id="formcontainer">	
-		
+		<?php if($msg != ''): ?>
+        <br> 
+    		<div class="alert <?php echo $msgClass; ?>"><?php echo $msg; ?></div>
+      <?php endif; ?>	
     	
       <?php 
-            if(empty($_COOKIE['user_id'])) { 
-                echo ' <br> ';
-    		echo  '<p class="alert alert-danger">' . $msg . '</p>';
+            //if(empty($_COOKIE['users_id'])) { solution with cookies
+              if(empty($_SESSION['users_id'])) { // solution with sessions
+                // only show for if session with name users_id does not exist
+                //echo ' <br> ';
+    		        //echo  '<p class="alert alert-danger">' . $msg . '</p>';
        ?>	
         
         <br> 
@@ -116,7 +129,10 @@ if(!isset($_COOKIE['user_id'])) {
 
         <?php }  else { 
                  // successfull login
-                  echo '<p class="alert alert-success"> You are loged in as ' . $_COOKIE['username']. '</p>';
+                  // cookie solution echo '<p class="alert alert-success"> You are loged in as ' . $_COOKIE['username']. '</p>';
+                  echo '<br>';
+                  echo '<p class="alert alert-success"> You are loged in as <em>' . $_SESSION['username']. '</em></p>'; // session solution
+                  echo '<p class="alert alert-success"> If you will logout or login with anither credentials, please first <a href="logout.php">logout!. </a></p>';
               } 
         ?>	
 

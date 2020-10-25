@@ -6,6 +6,16 @@
 
 <?php // leading part of page for simple header securing and basic variable setup
     require_once('appvars.php'); // including variables for database
+    session_start(); // start the session - must be added on all pages for session variable accessing
+
+	// solution using SESSIONS with COOKIES for longer (30days) login persistency
+    
+  if(!isset($_SESSION['users_id'])) { // if session is no more active
+		if(isset($_COOKIE['users_id']) && isset($_COOKIE['username'])) { // but cookie is set then renew session variables along them
+			$_SESSION['users_id'] = $_COOKIE['users_id'];
+			$_SESSION['username'] = $_COOKIE['username'];
+		}
+	 }
    
 	// two variables for message and styling of the mesage with bootstrap
 	$msg = '';

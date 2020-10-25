@@ -6,14 +6,38 @@
 
 <?php
  require_once('appvars.php'); // including variables for database
-    // logout user by deleting cookie 
+    // part for SESSION solution for login persistence and its ending
+
+    //even when logging out you have to first start the session in order to access the session variables
+    session_start();
+    if(isset($_SESSION['users_id'])) {
+        $_SESSION = array(); // deleting session vars
+               
+    };
+
+    // if session cookie exists, then delete it
+    if(isset($_COOKIE[session_name()])) {
+        setcookie('session_name()','',time() - 3600);
+        
+               
+    };
+
+    // Destroy session
+    session_destroy();
+
+
+    // logout user by deleting cookie - for COOKIES persistence solution
     
-    if(isset($_COOKIE['user_id'])) {
+   /* if(isset($_COOKIE['users_id'])) {
         setcookie('user_id','',time() - 3600);
         setcookie('username','',time() - 3600);
         echo "deleted cookies";
                
-    };
+    }; */
+
+    // for our final solution SESSIONS+ longer login persistency with COOKIES must be also cokies deleted
+    setcookie('users_id', $row['users_id'], time()-3600);
+    setcookie('username', $row['username'], time()-3600);
 
     // redirect to homepage in logout state
     $home_url = 'http://'. $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';

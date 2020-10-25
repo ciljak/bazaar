@@ -5,7 +5,17 @@
 <!-- ******************************************************************* -->
 
 <?php
-    require_once('appvars.php'); // including variables for database
+	require_once('appvars.php'); // including variables for database
+	session_start(); // start the session - must be added on all pages for session variable accessing
+
+	// solution using SESSIONS with COOKIES for longer (30days) login persistency
+    
+    if(!isset($_SESSION['users_id'])) { // if session is no more active
+		if(isset($_COOKIE['users_id']) && isset($_COOKIE['username'])) { // but cookie is set then renew session variables along them
+			$_SESSION['users_id'] = $_COOKIE['users_id'];
+			$_SESSION['username'] = $_COOKIE['username'];
+		}
+	 }
 	// two variables for message and styling of the mesage with bootstrap
 	$msg = '';
 	$msgClass = '';
@@ -130,13 +140,16 @@
       <div class="container">
         <div class="navbar-header">   
 		<?php // generate menu if user is loged in or not
-		  if(isset($_COOKIE['username'])) { // loged in user
+		 // old solution with cookies if(isset($_COOKIE['username'])) { // loged in user
+			if(isset($_SESSION['username'])) { // loged in user
 			 echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
 			 echo '<a class="navbar-brand" href="editprofile.php"> Edit profile </a>';
-			 echo '<a class="navbar-brand" href="logout.php"> Logout </a>';
-	      } else { // visitor without login
+			 echo '<a class="navbar-brand" href="logout.php"> Logout ' .$_SESSION['username'] .'</a>';
+		  } else { // visitor without login
 			echo '<a class="navbar-brand" href="login.php"> Log In </a>';
 			echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';
+
+			echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
 		 }
 		?>	 
          

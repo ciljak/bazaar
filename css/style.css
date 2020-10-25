@@ -219,5 +219,33 @@ th { /* header of table */
 
 
 }
+/* these part contain formating for frames with specific color bacgrounds used for fileds separation in forms */
+#frame_red {
+  padding: 10px;
+  background-color: rgb(248, 150, 150) ;
+  border: 1px dotted #616161 ;
+
+}
+
+#frame_green {
+  padding: 10px;
+  background-color: rgb(181, 248, 150) ;
+  border: 1px dotted #616161 ;
+
+}
+
+#frame_blue {
+  padding: 10px;
+  background-color: rgb(150, 212, 248) ;
+  border: 1px dotted #616161 ;
+
+}
+
+#frame_gray {
+  padding: 10px;
+  background-color: rgb(167, 167, 167) ;
+  border: 1px dotted #616161 ;
+
+}
 
   
