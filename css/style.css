@@ -197,7 +197,7 @@ th { /* header of table */
     margin-left: 25px;
     }
 /* ************************************************ */
-/* Login additional formattng                    */
+/* Login additional formattng                       */
 /* ************************************************ */
 
 
@@ -248,4 +248,9 @@ th { /* header of table */
 
 }
 
-  
+/* ************************************************ */
+/*                  Center image                    */
+/* ************************************************ */
+.aligncenter {
+  text-align: center;
+}

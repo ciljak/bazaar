@@ -1,7 +1,7 @@
 <!-- ******************************************************************* -->
 <!-- PHP "self" code handling user profile editing                       -->
 <!-- ******************************************************************* -->
-<!-- Vrsion: 1.0        Date: 25.10-25.10.2020 by CDesigner.eu           -->
+<!-- Vrsion: 1.0        Date: 25.10-30.10.2020 by CDesigner.eu           -->
 <!-- ******************************************************************* -->
 
 <?php
@@ -59,26 +59,28 @@
 	    $city = htmlspecialchars($_POST['city']);
 	    $ZIPcode = htmlspecialchars($_POST['ZIPcode']);
 	    
-        $GDPR_accept = isset($_POST['GDPR_accept']); // checkbox doesnot send post data, they must be checked for its set state !!!
-        $rules_accept = isset($_POST['rules_accept']);
+       // $GDPR_accept = isset($_POST['GDPR_accept']); // checkbox doesnot send post data, they must be checked for its set state !!!
+        isset($_POST['rules_accept']) ? $rules_accept ="1": $rules_accept ="0"; // checkbox doesnot send post data, they must be checked for its set state !!!
+        isset($_POST['GDPR_accept']) ? $GDPR_accept ="1": $GDPR_accept ="0";
     
         $avatar = htmlspecialchars($_FILES['avatar']['name']);           // photo location of avatar
         $profile_text = htmlspecialchars($_POST['profile_text']);
 		
         //echo 'users_id'; echo $users_id;
-        echo $rules_accept;
-        echo $GDPR_accept;
-        echo $nickname;
+        //echo $rules_accept;
+        //echo $GDPR_accept;
+        //echo $nickname;
 		
 	
 
 		
 
 		// Controll if all required fields was written
-		if( !empty($nickname)  && $rules_accept && $GDPR_accept) { // these item identifiers are mandatory and can not be empty
+		if( !empty($nickname) && $rules_accept && $GDPR_accept) { // these item identifiers are mandatory and can not be empty
 			// If check passed - all needed fields are written
 			// Check if E-mail is valid
-			
+			//echo $rules_accept;
+      //  echo $GDPR_accept;
 
                 
                 // move image to /images final folder from temporary download location
@@ -99,9 +101,12 @@
 								}
 							
 							// INSERT new entry
-						// need systematic debug!!!    
-							$sql = "UPDATE bazaar_user SET
-                                        
+					  	// need systematic debug!!!  - now it is ok, it can be used as further example  
+					
+              // example working and tested syntax for UPPDATE query $sql = "UPDATE bazaar_user SET nickname = '".$nickname."',  first_name = '".$first_name."'
+              //               WHERE   users_id = '".$users_id. "' AND username = '".$username."'" ; 
+
+              $sql = "UPDATE bazaar_user SET
                                             nickname = '".$nickname."',
                                             first_name = '".$first_name."',
                                             lastname_name = '".$lastname_name."',
@@ -109,12 +114,17 @@
                                             city = '".$city."',
                                             ZIPcode = '".$ZIPcode."',
                                             write_date = now(),
-                                            email = '".$email."',
+                                            
                                             GDPR_accept = '".$GDPR_accept."',
                                             rules_accept = '".$rules_accept."',
                                             avatar  = '".$avatar."',
-                                            profile_text = '".$profile_text."',
-                                      WHERE   users_id = "."'$users_id'". " AND username = "."'$username'" ;     
+                                            profile_text = '".$profile_text."'
+                                            
+
+                                            WHERE   users_id = '".$users_id. "' AND username = '".$username."'"; 
+
+              // . $_POST['userid'] . "', first_name='" . $_POST['first_name'] . "', last_name='" . $_POST['last_name'] . "',
+              // city_name='" . $_POST['city_name'] . "' ,email='" . $_POST['email'] . "' WHERE userid='" . $_POST['userid'] . "'");
                                
 							//show updated user data true
 							$is_result = true; 
@@ -129,25 +139,32 @@
 								$msg = "ERROR: Could not able to execute $sql. " . mysqli_error($dbc);
 								$msgClass = 'alert-danger';
                             }
-                            
+                            // echo "DEBUG - idem k casti s heslom";            
                             // update password only if both passwords are not emty and are equal and old password match 
                             //pass_word = $pass_word, and only add hash to filed not plane password
                            // $pass_word1 = htmlspecialchars($_POST['pass_word1']);
                            // $pass_word2 = htmlspecialchars($_POST['pass_word2']);
                            // $pass_word_old = htmlspecialchars($_POST['pass_word_old']);
-                           if(isset($_pass_word1) && isset($_pass_word2) && isset($_pass_word_old )){ // old and two input for new password are provided
-                            if($_pass_word1 == $_pass_word2){ // new passwords is ok typed 2x the same
+                           //DEBUG - echo $pass_word1;
+                           //DEBUG - echo $pass_word2;
+                           //DEBUG - echo $pass_word_old;
+                           if(isset($pass_word1) && isset($pass_word2) && isset($pass_word_old )){ // old and two input for new password are provided
+                            if($pass_word1 == $pass_word2){ // new passwords is ok typed 2x the same
+                                // echo "DEBUG - hesla sa rovnaju"; 
                                 // obtain old password sha1 for reference
                                 $_username = $_SESSION['username'];
+                                // echo "DEBUG -username $_username";
                                 $_users_id = $_SESSION['users_id'];
-                                $sql = "SELECT pass_word FROM bazaar_user WHERE username = "."'$_username'". " AND users_id = "."'$_users_id'" ;
+                                //echo " DEBUG -users_id $_users_id  ";
+                                //$sql = "SELECT * FROM bazaar_user WHERE username = "."'$_username'". " AND users_id = "."'$_users_id'" ;
+                                $sql = "SELECT * FROM bazaar_user WHERE username = "."'$_username'"."LIMIT 1"  ;
                                 if($output = mysqli_query($dbc, $sql)){
                                     if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
                                         
                                         while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
                                        
                                                 $pass_word_old_stored = $row['pass_word'];
-                                                
+                                                // echo "DEBUG - 0. vo while hash stareho hesla je $pass_word_old_stored  ";
                                                                                      
                                         }
                                         
@@ -159,20 +176,28 @@
                                 } else{
                                     echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
                                 }
-                                
-                                if($pass_word_old_stored == $_pass_word_old){ // if old pasword provided by user is the same as in database, passwords can be changed
+                                //echo "DEBUG - 1. hash stareho hesla je $pass_word_old_stored ";
+                                //echo "DEBUG - 2. hash stareho zadaneho hesla uzivatelom $pass_word_old) ";
+                                if($pass_word_old_stored == $pass_word_old){ // if old pasword provided by user is the same as in database, passwords can be changed
+                                //  echo "DEBUG - 3. stare heslo bolo zadane spravne"; 
+                                   
+                                //  echo "DEBUG - pasword je zmienany na $pass_word1";
                                     $sql = "UPDATE bazaar_user SET
                                         
                                             
-                                            pass_word = $_pass_word1,
+                                            pass_word = '".$pass_word1."'
                                    
-                                            WHERE   users_id = "."'$_users_id'". " AND username = "."'$_username'" ;   
-                                    if(mysqli_query($dbc, $sql)){
-                                        if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
-                                            
+                                            WHERE   users_id = '".$users_id. "' AND username = '".$username."'" ;   
+                                    if($output = mysqli_query($dbc, $sql)){
+                                        if($output) {  // if any record obtained from SELECT query
+                                          //echo "Heslo bolo úspešne zmenené"; 
+                                          $msg .= ' PASSWORD changed succesfuly. ';
+								                          $msgClass = 'alert-success';
                                           
                                         } else{
-                                            echo "Password cannot be changed."; // if no records in table
+                                            //echo "Password cannot be changed."; // if no records in table
+                                            $msg .= ' PASSWORD cannot be changed. ';
+								                            $msgClass = 'alert-danger';
                                         }
                                     } else{
                                         echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
@@ -195,7 +220,11 @@
                         };
                         
                    
-        }; 
+        } else {
+          // Failed - if not all fields are fullfiled
+          $msg = 'Please fill in all * marked contactform fields - nickname, GDPR and portal rules are mandatory!';
+          $msgClass = 'alert-danger'; // bootstrap format for allert message with red color
+                    };
         
     
 
@@ -224,13 +253,23 @@
 	<nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">    
-          <a class="navbar-brand" href="index.php">Bazaar - editing personal profile</a>
+         
+          <?php if(isset($_SESSION['users_id'])) {  // display different page header along way why is user loged in or not - users_id is set when user is loged in
+              echo  '<a class="navbar-brand" href="editprofile.php">Bazaar - editing personal profile</a>';
+            } else { 
+              echo  '<a class="navbar-brand" href="login.php">Unauthorized - please Log In </a>'; 
+            };
+            ?>
         </div>
       </div>
     </nav>
     <div class="container" id="formcontainer">	
-		
-    	
+
+<!-- ***************************************** -->
+<!-- HTML par available after succesfull login -->
+<!-- ***************************************** -->		
+<?php if(isset($_SESSION['users_id'])) { //if user is loged with users_id then editprofile form is available?> 
+
 	  <?php if($msg != ''): ?>
     		<div class="alert <?php echo $msgClass; ?>"><?php echo $msg; ?></div>
       <?php endif; ?>	
@@ -273,8 +312,8 @@
                                             $city = $row['city'];
                                             $ZIPcode = $row['ZIPcode'];
                                             $email = $row['email'];
-                                            $gdpr = $row['rules_accept']; // checkbox doesnot send post data, they must be checked for its set state !!!
-                                            $rules_accept = $row['GDPR_accept'];
+                                            $gdpr = $row['GDPR_accept']; // checkbox doesnot send post data, they must be checked for its set state !!!
+                                            $rules_accept = $row['rules_accept'];
                                         
                                             $avatar = $row['avatar'];           // photo location of avatar
                                             $profile_text = $row['profile_text'];
@@ -344,10 +383,10 @@
               <label>Acceptation of portal rules and GDPR regulations - IMPORTANT PART:</label>
               <br>
               <br>
-	      	  <input type="checkbox" name="GDPR_accept" class="form-control" value="<?php echo isset($_POST['GDPR_accept']) ? $GDPR_accept : $GDPR_accept; ?>">
+	      	  <input type="checkbox" name="GDPR_accept" class="form-control" <?php if($gdpr) { echo "checked"; } ?> >
               <label>* I agree with GDPR regulations</label>
               <br>
-              <input type="checkbox" name="rules_accept" class="form-control" value="<?php echo isset($_POST['rules_accept']) ? $rules_accept : $rules_accept; ?>">
+              <input type="checkbox" name="rules_accept" class="form-control" <?php if($rules_accept) { echo "checked"; } ?> >
               <label>* I agree with rules of the portal</label>
               <br>
 
@@ -355,18 +394,47 @@
               </div>
             </div>  
 
-              
-			 
-              
-				
-
-
-
-
-
+        
 			  
 	      </div>
 	      <div id="frame_green">
+                 <?php
+                        // From database obtain avatar image file name and next recreate their location
+                       
+						          	$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
+
+                        // Check connection
+                        if($dbc === false){
+                          die("ERROR: Could not connect to database - stage of article listing. " . mysqli_connect_error());
+                        }
+
+
+								
+										
+                       // read $avatar value from databaze of user
+                        $_username = $_SESSION['username']; // get info about currently loged user
+                        $_users_id = $_SESSION['users_id'];
+                        $sql = "SELECT * FROM bazaar_user WHERE username = "."'$_username'"." AND users_id="."'$_users_id'"; // query avatar
+                        
+                        if($output = mysqli_query($dbc, $sql)){
+                          if(mysqli_num_rows($output) > 0){
+                           $row = mysqli_fetch_array($output);
+                           $write_date_obtained = $row['write_date']; // get latest profile update date for output located at the botoom part of page
+                           if (!empty($row['avatar'])) {
+                            $image_location = IMAGE_PATH.$row['avatar'];
+                            echo "<center> <td id=\"gray_under_picture\">  <br> <img  align=\"middle\" src=\"$image_location\" alt=\" profile avatar picture \"  height=\"250\"> <br> <br> <br> </td> </center>";
+                           } else {
+                            echo "<center> <td id=\"gray_under_picture\"> <br> <img align=\"middle\" src=\"./images/default_avatar.png\" alt=\" profile avatar picture \"  height=\"250\"> <br> <br> </td> </center>";
+                           }
+                           
+                           mysqli_free_result($output);
+                          }
+                        }    
+                        
+
+                        // Close connection
+							          mysqli_close($dbc);
+                 ?>        
                 <p> In this part you can select your profile avatar! </p>
                 <label>* Please select location of your avatar from drive - max 5MB!</label>
                 <div class="custom-file">
@@ -411,8 +479,7 @@
 			  
 			   
              </script>
-            
-           
+       
 
           <br><br>
 		 
@@ -437,15 +504,12 @@
               <br>
             </div>  
               <br>
-         
-        
-
+    
 		  
          <br><br>
 		 
 	 
-		  <button type="submit" name="submit" class="btn btn-warning"> Update profile information </button>
-		  
+		  <center> <button type="submit" name="submit" class="btn btn-warning btn-lg"> Update profile information </button> </center>
 		  
 		
 		 
@@ -456,13 +520,10 @@
 				 if ($is_result ) {
 					
 
-						echo "<br> <br>";
+						echo " <br> <br>";
 						echo " <table class=\"table table-success\"> ";
 						echo " <tr>
-							   <td><h5> <em> Item for selll: </em> $name_of_item for $price_eur €  </h5> <h5> has been succesfully added to selling list. Item will be visible
-							   on bazaar page after admin approval. </h5> ";
-                               $image_location = IMAGE_PATH.$screenshot1;
-                        echo " <img src=\"$image_location\" alt=\" score image \"  height=\"150\"> ";       
+							   <td><h5>  Personal info  for user  <strong> $username </strong> was last modified at $write_date_obtained. ";    
 						
 						  
 						echo "	   <td>   </tr> "; 
@@ -475,7 +536,16 @@
 		
 	  </form>
      
-
+<!-- ***************************************** -->
+<!-- HTML part displayed for unloged user      -->
+<!-- ***************************************** --> 
+    <?php } else { // else if user is not loged then form will noot be diplayed?>  
+      <br> 
+        <img id="calcimage" src="./images/logininvit.png" alt="Log in invitation" width="150" height="150">
+        <br>
+        <h4>For further profile editing please log in <a class="navbar-brand" href="login.php"> here. </a></h4>
+        <br>
+      <?php } ?>  
 	  
 		
 		</div>
