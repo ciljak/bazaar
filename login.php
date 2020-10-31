@@ -29,7 +29,7 @@
              if(!empty($usr_username) && !empty($usr_passwd)) {
               // try lookup user database
               $usr_passwd_SHA = sha1($usr_passwd);
-              $sql = "SELECT users_id, username FROM bazaar_user WHERE username = "."'$usr_username'". " AND pass_word = "."'$usr_passwd_SHA'" ;
+              $sql = "SELECT users_id, username, user_role FROM bazaar_user WHERE username = "."'$usr_username'". " AND pass_word = "."'$usr_passwd_SHA'" ;
               // debug output echo  $usr_username; 
               // echo  $usr_passwd;
               //echo $usr_passwd_SHA;
@@ -42,9 +42,11 @@
                   //setcookie('username', $row['username']);
                   $_SESSION['users_id'] = $row['users_id']; // sloution with sessions
                   $_SESSION['username'] = $row['username'];
+                  $_SESSION['user_role'] = $row['user_role']; // added user_role session variable
                   // new cookies for login persistency that expires after 30 days without logout combination SESSION with COOKIES is awailable
                   setcookie('users_id', $row['users_id'], time()+(60+60*24*30));
                   setcookie('username', $row['username'], time()+(60+60*24*30));
+                  setcookie('user_role', $row['user_role'], time()+(60+60*24*30)); // cookie for user_role of loged in user added
 
                   $home_url = 'http://'. $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
                   header('Location:'. $home_url);

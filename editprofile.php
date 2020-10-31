@@ -14,7 +14,8 @@
     if(!isset($_SESSION['users_id'])) { // if session is no more active
 		if(isset($_COOKIE['users_id']) && isset($_COOKIE['username'])) { // but cookie is set then renew session variables along them
 			$_SESSION['users_id'] = $_COOKIE['users_id'];
-			$_SESSION['username'] = $_COOKIE['username'];
+      $_SESSION['username'] = $_COOKIE['username'];
+      $_SESSION['user_role'] = $_COOKIE['user_role']; // added for role
 		}
 	 }
 	$msg = '';
@@ -252,13 +253,29 @@
 <body>
 	<nav class="navbar navbar-default">
       <div class="container">
-        <div class="navbar-header">    
-         
-          <?php if(isset($_SESSION['users_id'])) {  // display different page header along way why is user loged in or not - users_id is set when user is loged in
-              echo  '<a class="navbar-brand" href="editprofile.php">Bazaar - editing personal profile</a>';
-            } else { 
-              echo  '<a class="navbar-brand" href="login.php">Unauthorized - please Log In </a>'; 
+        <div class="navbar-header">  
+        <?php // generate menu if user is loged in or not
+        // old solution with cookies if(isset($_COOKIE['username'])) { // loged in user
+          if(isset($_SESSION['username'])) { // loged in user
+            echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
+            echo '<a class="navbar-brand" href="editprofile.php"> Edit profile </a>';
+            echo '<a class="navbar-brand" href="logout.php"> Logout ' .$_SESSION['username'] .'</a>';
+            if(isset($_SESSION['user_role'])=='admin') { // if oged user is admin role
+              echo '<a class="navbar-brand" href="admin.php"> Manage your page </a>';
             };
+          } else { // visitor without login
+            echo '<a class="navbar-brand" href="login.php"> Log In </a>';
+            echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';
+      
+            echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
+          }
+        ?>	  
+         
+          <?php /*-- older solution only for this page menu if(isset($_SESSION['users_id'])) {  // display different page header along way why is user loged in or not - users_id is set when user is loged in
+                  echo  '<a class="navbar-brand" href="editprofile.php">Bazaar - editing personal profile</a>';
+                } else { 
+                  echo  '<a class="navbar-brand" href="login.php">Unauthorized - please Log In </a>'; 
+            }; */
             ?>
         </div>
       </div>
@@ -277,6 +294,25 @@
         <br> 
         <img id="calcimage" src="./images/logout.png" alt="Edit profile main page icon" width="150" height="150">
         <br>
+
+      <?php   //part displaying user_role of loged user
+				 
+					
+
+						echo " <br> <br>";
+            echo " <table class=\"table table-success\"> ";
+            $user_role = $_SESSION['user_role'];
+            $username = $_SESSION['username'];
+						echo " <tr>
+							   <td><h5>  User_role of succesfully loged user with name <strong> $username </strong> is <strong>$user_role</strong> . ";    
+						
+						  
+						echo "	   <td>   </tr> "; 
+						echo " </table> ";
+					
+					//echo " <input type="text" id="result_field" name="result_field" value="$result"  >  <br>" ;
+				
+				 ?>  
 
       <form enctype="multipart/form-data" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
       <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
@@ -543,7 +579,7 @@
       <br> 
         <img id="calcimage" src="./images/logininvit.png" alt="Log in invitation" width="150" height="150">
         <br>
-        <h4>For further profile editing please log in <a class="navbar-brand" href="login.php"> here. </a></h4>
+        <h4>For further profile editing please log in<a class="navbar-brand" href="login.php"><h4><u>here.</u> </h4></a></h4>
         <br>
       <?php } ?>  
 	  

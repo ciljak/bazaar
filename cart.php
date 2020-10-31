@@ -1,8 +1,12 @@
-<!-- ******************************************************************* -->
-<!-- PHP "self" code handling homepage of bazaar                         -->
-<!-- ******************************************************************* -->
-<!-- Vrsion: 1.0        Date: 17. - 18.10.2020 by CDesigner.eu           -->
-<!-- ******************************************************************* -->
+<!-- ***************************************************************************** -->
+<!-- PHP "self" code showing content of items added into a cart                    -->
+<!-- ***************************************************************************** -->
+<!-- Vrsion: 1.0        Date: 1.11.2020 by CDesigner.eu                            -->
+<!-- ***************************************************************************** -->
+
+<!-- ****************** MEMO - base is from index.php - show all items with cart_number = session(users_id) + calc total
+                              summ, create remove from cart link with removefromcart.php 
+                              show address for delivery and button submitt to buy ************************************ -->
 
 <?php
 	require_once('appvars.php'); // including variables for database

@@ -38,6 +38,7 @@
     // for our final solution SESSIONS+ longer login persistency with COOKIES must be also cokies deleted
     setcookie('users_id', $row['users_id'], time()-3600);
     setcookie('username', $row['username'], time()-3600);
+    setcookie('user_role', $row['user_role'], time()-3600); // added deletion of user_role cookie - after altering table for user_role
 
     // redirect to homepage in logout state
     $home_url = 'http://'. $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
