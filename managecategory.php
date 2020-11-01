@@ -1,7 +1,7 @@
 <!-- ******************************************************************* -->
 <!-- PHP "self" code handling adding adding category by admin of page    -->
 <!-- ******************************************************************* -->
-<!-- Vrsion: 1.0        Date: 11.10-XX.X.2020 by CDesigner.eu            -->
+<!-- Vrsion: 1.0        Date: 11.10-11.10.2020 by CDesigner.eu            -->
 <!-- ******************************************************************* -->
 
 <?php
@@ -254,7 +254,7 @@ if($dbc === false){
 // read all rows (data) from guestbook table in "test" database
 $sql = "SELECT * FROM bazaar_category ORDER BY category ASC, subcategory ASC";  // read in reverse order of score - highest score first
 /*************************************************************************/
-/*  Output in Table - solution 1 - for debuging data from database       */
+/*  Output in Table - listening all category in bazaar_category table    */
 /*************************************************************************/
 // if data properly selected from guestbook database tabele
 
