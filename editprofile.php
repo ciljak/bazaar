@@ -263,6 +263,8 @@
             if(isset($_SESSION['user_role'])=='admin') { // if oged user is admin role
               echo '<a class="navbar-brand" href="admin.php"> Manage your page </a>';
             };
+            require_once('sell_icon.php'); // graphic menu item for selling your items
+            require_once('cart_icon.php'); // small cart icon in menu
           } else { // visitor without login
             echo '<a class="navbar-brand" href="login.php"> Log In </a>';
             echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';

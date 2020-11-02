@@ -55,7 +55,9 @@
 				echo '<a class="navbar-brand" href="logout.php"> Logout ' .$_SESSION['username'] .'</a>';
 				if(isset($_SESSION['user_role'])=='admin') { // if oged user is admin role
 				   echo '<a class="navbar-brand" href="admin.php"> Manage your page </a>';
-			   };
+               };
+               require_once('sell_icon.php'); // graphic menu item for selling your items
+               require_once('cart_icon.php'); // small cart icon in menu
 			 } else { // visitor without login
 			   echo '<a class="navbar-brand" href="login.php"> Log In </a>';
 			   echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';
@@ -67,6 +69,9 @@
       </div>
     </nav>
     <div class="container" id="container_1060">	<!-- wider container for admin page - width 1060px - styled in style.css-->
+
+    <br> 
+	  <h4> Aministration of Bazaar app </h4>
 
 <!-- *************************************************** -->
 <!-- HTML part available after succesfull login as admin -->

@@ -42,7 +42,8 @@
 		// Data obtained from $_postmessage are assigned to local variables
 		$name_of_item = htmlspecialchars($_POST['name_of_item']);
 		$price_eur = htmlspecialchars($_POST['price_eur']);
-		$users_id = htmlspecialchars($_POST['users_id']);
+		//$users_id = htmlspecialchars($_POST['users_id']);
+		$users_id = $_SESSION['users_id']; // now reworked to obtain users_id from SESSION value
 		//echo 'users_id'; echo $users_id;
 		
 		$category_subcategory = htmlspecialchars($_POST['category_subcategory']); // must be converted to subcategory_id (*)
@@ -206,6 +207,8 @@
 				if(isset($_SESSION['user_role'])=='admin') {
 				   echo '<a class="navbar-brand" href="admin.php"> Manage your page </a>';
 			   };
+			   require_once('sell_icon.php'); // graphic menu item for selling your items
+			   require_once('cart_icon.php'); // small cart icon in menu
 			 } else { // visitor without login
 			   echo '<a class="navbar-brand" href="login.php"> Log In </a>';
 			   echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';
@@ -221,7 +224,10 @@
     	
 	  <?php if($msg != ''): ?>
     		<div class="alert <?php echo $msgClass; ?>"><?php echo $msg; ?></div>
-      <?php endif; ?>	
+	  <?php endif; ?>	
+	  
+	  <br> 
+	  <h4> Add your item for sell listening ... </h4>
         
         <br> 
         <img id="calcimage" src="./images/sell-product.png" alt="Calc image" width="150" height="150">
