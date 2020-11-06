@@ -265,3 +265,18 @@ th { /* header of table */
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
+
+/* ************************************************ */
+/*            Formating of pagination               */
+/* ************************************************ */
+#pagination {
+  text-align: center;
+  font-size:20px;
+  font-weight: bold;
+  padding: 15px 10px 15px 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: rgb(255, 255, 255) ;
+  
+}
+

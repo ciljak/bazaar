@@ -6,6 +6,7 @@
 
 <?php
 	require_once('appvars.php'); // including variables for database
+	require_once('functions.php'); // include external functions
 	session_start(); // start the session - must be added on all pages for session variable accessing
 
 	// solution using SESSIONS with COOKIES for longer (30days) login persistency
@@ -446,6 +447,179 @@ if($output = mysqli_query($dbc, $sql)){
 
 // Close connection
 mysqli_close($dbc);
+
+/*************************************************************************/
+/*  Output in paginated form                                             */
+/*************************************************************************/
+
+ /***
+  *  Display pagination on the page - part included to listening in this area
+  */
+/* Attempt MySQL server connection. Assuming you are running MySQL
+server with default setting (user 'root' with no password) */
+$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
+
+//GET data for pagination send to page herself
+
+//calculate pagination information
+$cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
+$results_per_page = 5;
+$skip = (($cur_page -1) * $results_per_page);
+
+
+
+
+
+// Check connection
+if($dbc === false){
+    die("ERROR: Could not connect to database - stage of article listing. " . mysqli_connect_error());
+}
+
+// first  question to database table for obtaining number of published items in a database - obtain value for $total
+$sql = "SELECT * FROM bazaar_item WHERE published="."'1'"." AND cart_number="."'0'"." ORDER BY item_id DESC ";  // read in reverse order of score - highest score first              
+$output_for_number_rows_count = mysqli_query($dbc, $sql); // query database
+$total = mysqli_num_rows($output_for_number_rows_count);	//get number of rows in databse				
+    
+            
+// read all rows (data) from guestbook table in "test" database
+$sql = "SELECT * FROM bazaar_item WHERE published="."'1'"." AND cart_number="."'0'"." ORDER BY item_id DESC LIMIT $skip, $results_per_page";  // read in reverse order of score - highest score first
+/*************************************************************************/
+/*  Output in Table - solution 1 - for debuging data from database       */
+/*************************************************************************/
+// if data properly selected from guestbook database tabele
+echo "<br><br>";
+echo "<h4>Latest added items for you! </h4>";
+echo "<br>";
+
+/***
+ *  Obtaining wished number of item per page - option for select
+ */
+?>
+<form  method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+      
+<div class="form-group">
+<label> Set expected number of items per page -5 is default:</label>
+<input list="number_per_page" name="number_per_page" placeholder="please select">
+	  <datalist id="number_per_page"> <!-- must be converted in subcategory_id in script - marked with (*) -->
+		  <option value="10">
+		  <option value="15">	
+		  <option value="20">	
+		  <option value="50">
+		  <option value="100">	    
+				   
+	  </datalist>
+	 
+	
+	
+
+	  <!-- users_id from session obtaining - for debuging and testing is set as hidden -->
+	 
+	
+</div>
+
+<br><br>
+
+<button type="submit" name="nr_of_pages" class="btn btn-warning"> Use selected number of pages! </button>
+
+<br><br>
+
+</form>
+
+
+<?php
+
+echo "<br>"; echo "<br>";
+
+if($output = mysqli_query($dbc, $sql)){
+	if(mysqli_num_rows($output) > 0){  // if any record obtained from SELECT query
+		// create table output
+		echo "<table>"; //head of table
+			echo "<tr>";
+				//echo "<th>id</th>";
+				echo "<th>Name</th>";
+				echo "<th>Price</th>";
+				echo "<th>Category</th>";
+				echo "<th>Screenshot1</th>";
+				echo "<th>More info</th>";
+				
+				
+			echo "</tr>";
+		while($row = mysqli_fetch_array($output)){ //next rows outputed in while loop
+			echo " <div class=\"mailinglist\"> " ;
+			echo "<tr>";
+				//echo "<td>" . $row['item_id'] . "</td>";
+				echo "<td class=\"item_name\">" . $row['name_of_item'] . "</td>";
+				echo "<td class=\"price\">" . $row['price_eur'] . " € </td>";
+
+							/* convert category_id in to category and subcategory */
+							$subcategory_id = $row['subcategory_id'];
+							$category_idsupl	= "" ;
+							$subcategory_idsupl	= "" ;
+							// (*) -- conversion of category and subcategory into category%id
+								
+								// create SELECT query for category and subcategory names from database
+								$sql_supl = "SELECT category, subcategory FROM bazaar_category WHERE subcategory_id = "."'$subcategory_id'" ;
+								/*$output_supl = mysqli_query($dbc, $sql_supl);
+								$row_supl = mysqli_fetch_array($output_supl);
+								$category_id	= $row_supl['category'] ;
+								$subcategory_id	= $row_supl['subcategory'] ;
+								echo "<td>" . $category_id."/".$subcategory_id."</td>";*/
+								// execute sql and populate data list with existing category in database
+								if($output_supl = mysqli_query($dbc, $sql_supl)){
+									if(mysqli_num_rows($output_supl) > 0){  // if any record obtained from SELECT query
+										while($row_supl = mysqli_fetch_array($output_supl)){ //next rows outputed in while loop
+											
+											$category_idsupl	= $row_supl['category'] ;
+											$subcategory_idsupl	= $row_supl['subcategory'] ;
+											
+												
+										}
+										
+										
+										// Free result set
+										mysqli_free_result($output_supl);
+									} else {
+										echo "There is no souch category-subcategory in category table. Please correct your error."; // if no records in table
+									}
+								} else{
+									echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+								}
+
+				echo "<td>" . $category_idsupl."/".$subcategory_idsupl."</td>";
+				
+				    $image_location = IMAGE_PATH.$row['screenshot1'];
+				echo "<td id=\"gray_under_picture\"> <img  src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"250\"> </td>"; 
+				echo '<td colspan="1"><a id="DEL" href="item.php?item_id='.$row['item_id']. '"> >> Visit item page  </a></td></tr>'; //construction of GETable link
+			echo "</tr>";
+			echo " </div> " ;
+		}
+		echo "</table>";
+		//count nuber of pages total
+		$num_pages = ceil($total / $results_per_page);
+		
+		//generate navigational page links if we have more than one page
+		
+		if($num_pages > 1) {
+			$user_search = ""; // not implemented yet, then set as clear values
+			$sort = "";
+			// included function for pagination generation function stored in functions.php page
+			echo generate_page_links($user_search, $sort, $cur_page, $num_pages);
+			echo "<br><br>";
+		}
+		// Free result set
+		mysqli_free_result($output);
+	} else{
+		echo "There is no item for sell. Please add one."; // if no records in table
+	}
+} else{
+	echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+}
+
+
+// Close connection
+mysqli_close($dbc);
+
+
 ?>
 	  
 
