@@ -228,6 +228,11 @@
 	  
 	  <br> 
 	  <h4> Add your item for sell listening ... </h4>
+
+<!-- *************************************************** -->
+<!-- HTML part available after succesfull login as user -->
+<!-- *************************************************** -->		
+<?php if(isset($_SESSION['users_id']) ) { //if user is loged with users_id then editprofile form is available?> 
         
         <br> 
         <img id="calcimage" src="./images/sell-product.png" alt="Calc image" width="150" height="150">
@@ -476,6 +481,21 @@ echo "<br>"; echo "<br>";
 // Close connection
 mysqli_close($dbc);
 ?>
+
+<!-- ***************************************** -->
+<!-- HTML part displayed for unloged user      -->
+<!-- ***************************************** --> 
+<?php } else { // else if user is not loged then form will noot be diplayed?>  
+    
+     
+        <br> 
+        <img id="calcimage" src="./images/logininvit.png" alt="Log in invitation" width="150" height="150">
+        <br>
+        <h4>For listening items for sell you must be loged in <a class="navbar-brand" href="login.php"> here. </a></h4>
+        <br>
+      
+
+<?php } ?>  
 	  
 
 	  
