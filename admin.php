@@ -6,6 +6,7 @@
 
 <?php
     require_once('appvars.php'); // including variables for database
+    require_once('functions.php'); // include external functions - generating links for pagination
     // two variables for message and styling of the mesage with bootstrap
     session_start(); // start the session - must be added on all pages for session variable accessing
 
@@ -25,7 +26,9 @@
 	$category = "";
 	$subcategory = "";
 	
-	$is_result = false; //before hitting submit button no result is available
+    $is_result = false; //before hitting submit button no result is available
+    $results_per_page  = 10; // results per page 
+
 	
 	
 		
@@ -135,7 +138,29 @@ if($dbc === false){
 /********************************************************************************************/   
 // querying bazaar_category for listed category items            
 // read all rows (data) from guestbook table in "test" database
-$sql = "SELECT * FROM bazaar_item ORDER BY item_add_date DESC";  // read in reverse order of score - highest score first
+
+
+	                /***
+					 *  Display pagination on the page - part included to listening in this area
+					*/ 
+					
+					//calculate pagination information
+					$cur_page = isset($_GET['page']) ? $_GET['page'] : 1;
+					// results per page default declater as 5 on top of page and changed in submitt part after reset button handling $results_per_page = 5;
+					$skip = (($cur_page -1) * $results_per_page);		
+
+							// Check connection
+							if($dbc === false){
+								die("ERROR: Could not connect to database - stage of article listing. " . mysqli_connect_error());
+							}
+
+					// first  question to database table for obtaining number of published items in a database - obtain value for $total
+					$sql ="SELECT * FROM bazaar_item  ";  // read in reverse order of score - highest score first
+					$output_for_number_rows_count_2 = mysqli_query($dbc, $sql); // query database
+					$total_2 = mysqli_num_rows($output_for_number_rows_count_2);	//get number of rows in databse	
+					
+                    	
+$sql = "SELECT * FROM bazaar_item ORDER BY item_add_date DESC LIMIT $skip, $results_per_page";  // read in reverse order of score - highest score first
 
 // processing table output form bazaar_category
 echo "<h4>I. Manage list of items for sell </h4>";
@@ -240,6 +265,21 @@ echo "<br>"; echo "<br>";
                 echo " </div> " ;
             }
             echo "</table>";
+                    /***
+					 *  Display pagination on the page - part included to listening in this area
+					*/ 
+                                        //Pagination support code - count nuber of pages total
+										$num_pages_2 = ceil($total_2 / $results_per_page);
+										
+										//generate navigational page links if we have more than one page
+										
+										if($num_pages_2 > 1) {
+											$user_search = ""; // not implemented yet, then set as clear values
+											$sort = "";
+											// included function for pagination generation function stored in functions.php page
+											echo generate_page_links($user_search, $sort, $cur_page, $num_pages_2);
+                                            echo "<br><br>";
+                                             }
             echo "<br>";
             echo "<hr>";
             // Free result set

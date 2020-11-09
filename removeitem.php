@@ -148,6 +148,9 @@
                     mysqli_query($dbc, $sql);
                     // confirm executed command
                     echo '<p> The item <strong>' . $name_of_item . '</strong> with id <strong>' . $item_id . '</strong> was succesfully deleted from listening on bazaar. </p>';
+                    @unlink(IMAGE_PATH . $screenshot1); //delete image file
+                    @unlink(IMAGE_PATH . $screenshot2);
+                    @unlink(IMAGE_PATH . $screenshot3);
                     break;
             }
               

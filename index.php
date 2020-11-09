@@ -6,7 +6,7 @@
 
 <?php
 	require_once('appvars.php'); // including variables for database
-	require_once('functions.php'); // include external functions
+	require_once('functions.php'); // include external functions - generating links for pagination
 	session_start(); // start the session - must be added on all pages for session variable accessing
 
 	// solution using SESSIONS with COOKIES for longer (30days) login persistency

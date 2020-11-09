@@ -6,6 +6,7 @@
 
 <?php
  require_once('appvars.php'); // including variables for database
+ require_once('captcha.php'); // including generator of captcha image
  session_start(); // start the session
    
  // two variables for message and styling of the mesage with bootstrap
@@ -13,6 +14,8 @@
  $msgClass = '';
  $usr_username = '';
  $usr_passwd = '';
+
+ $verified_human_by_CAPTCHA = -1; //
 
 //get info that user is loged in, if not try it looking at cookies
 //if(!isset($_COOKIE['s'])) { old solution with cookies
@@ -24,9 +27,26 @@
                 // accessing user entered login data
              $usr_username = htmlspecialchars($_POST['u_name']);    
              $usr_passwd = htmlspecialchars($_POST['u_pass']);
-             
 
-             if(!empty($usr_username) && !empty($usr_passwd)) {
+             //implement CAPTCHA pass-phrase verification
+    
+            $user_pass_phrase = sha1(htmlspecialchars($_POST['verify']));
+            $pass_phrase_now = htmlspecialchars($_POST['pass_phrase_now']);
+            $imageCaptchafilename_now = htmlspecialchars($_POST['imageCaptchafilename_now']); // name of current captcha photo file for deletion after usage
+             
+            if($pass_phrase_now == $user_pass_phrase) {
+              $verified_human_by_CAPTCHA = 1;
+              @unlink($imageCaptchafilename_now); // delete captcha file
+                //debug echo "captcha ok";
+        
+            } else {
+              $verified_human_by_CAPTCHA = 0;
+              @unlink($imageCaptchafilename_now); // also delete captcha file because new one was created
+              $msgClass = 'alert-danger';
+              $msgCAPTCHA = "Your CAPTCHA was written wrong, please correct it and resend.";
+            }; 
+
+             if(!empty($usr_username) && !empty($usr_passwd) && $verified_human_by_CAPTCHA) {
               // try lookup user database
               $usr_passwd_SHA = sha1($usr_passwd);
               $sql = "SELECT users_id, username, user_role FROM bazaar_user WHERE username = "."'$usr_username'". " AND pass_word = "."'$usr_passwd_SHA'" ;
@@ -66,7 +86,7 @@
               
             } else {
                 // username/ password were not entered - display error message
-                $msg = "Sorry, you must eneter username and password to log in. ";
+                $msg = "Sorry, you must eneter username and password along with correct CAPTCHA phrase to log in. ";
 			        	$msgClass = 'alert-danger';
    
             }     
@@ -123,6 +143,21 @@
 
                     <label>Password:</label>
                     <input type="password" onfocus="this.value='<?php echo isset($_POST['u_pass']) ? '' : ''; ?>'" name="u_pass" class="form-control" value="<?php echo isset($_POST['u_pass']) ? 'Please reenter' : 'Login name'; ?>">
+
+                    <label for="verify">Verification - enter text from image below:</label>
+                    <input type="text" onfocus="this.value='<?php echo isset($_POST['verify']) ? '' : ''; ?>'" name="verify" class="form-control" value="<?php echo isset($_POST['verify']) ? '' : 'Enter the CAPTCHA verify code'; ?>">
+                    <br>
+
+                    <?php if(($verified_human_by_CAPTCHA == 0) ): //error messaging if wrong CAPTCHA?>
+                    <br> 
+                    <div class="alert <?php echo $msgClass; ?>"><?php echo $msgCAPTCHA; ?></div>
+                    <?php endif; ?>	
+
+                    <center> <img src="<?php echo $imageCaptchafilename ; ?>" alt="Verification pass-phrase" > </center> 
+                    <!-- ass a hidden is sent sha actualy generated captcha pass-phrase only this way it is producet in same run -->
+                    <input type="hidden" name="pass_phrase_now" value="<?php echo sha1($pass_phrase); ?>" />
+                    <!-- as a hidden is sentname of captcha file for deletion after use -->
+                    <input type="hidden" name="imageCaptchafilename_now" value="<?php echo $imageCaptchafilename; ?>" />
             </div>
            <input id="loginsubmitt" type="submit" name="submit" class="btn btn-info" value="Log In"> 
            <br>

@@ -6,14 +6,23 @@
 
 <?php
  require_once('appvars.php'); // including variables for database
+ require_once('captcha.php'); // including generator of captcha image
+ 
+
+ 
    
  // two variables for message and styling of the mesage with bootstrap
  $msg = '';
  $msgClass = '';
  $u_name = '';
  $usr_passwd = '';
+ $verified_human_by_CAPTCHA = -1;
+ $pass_phrase_now = '';
+ 
 /* Attempt MySQL server connection.  */
 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
+// debug echo "CAPTCHA zo seesion ". $_SESSION['pass_phrase'];
+// debug echo "CAPTCHA v premennej ". $pass_phrase;
 
 if(isset($_POST['submit'])) { 
     // obtaining submitted data from POST
@@ -21,9 +30,33 @@ if(isset($_POST['submit'])) {
     $u_pass_1 = htmlspecialchars($_POST['u_pass_1']);
     $u_pass_2 = htmlspecialchars($_POST['u_pass_2']);
     $email = htmlspecialchars($_POST['email']);
+    
+    //implement CAPTCHA pass-phrase verification
+    
+    $user_pass_phrase = sha1(htmlspecialchars($_POST['verify']));
+    $pass_phrase_now = htmlspecialchars($_POST['pass_phrase_now']);
+    $imageCaptchafilename_now = htmlspecialchars($_POST['imageCaptchafilename_now']); // name of current captcha photo file for deletion after usage
+    
+    //debug echo "image name for deletion ".$imageCaptchafilename_now;
 
-    if(!empty($u_name) && !empty($email) && !empty($u_pass_1) && !empty($u_pass_2) && ($u_pass_1 = $u_pass_2)) {
+    // debug echo "CAPTCHA od usra ". $user_pass_phrase. "uzivatel napisal " . $_POST['verify'];
+    //debug echo "CAPTCHA z generatora ". $pass_phrase_now;
+    // echo "CAPTCHA ". $_SESSION['pass_phrase'];
+    if($pass_phrase_now == $user_pass_phrase) {
+      $verified_human_by_CAPTCHA = 1;
+      @unlink($imageCaptchafilename_now); // delete captcha file
+        //debug echo "captcha ok";
+
+    } else {
+      $verified_human_by_CAPTCHA = 0;
+      @unlink($imageCaptchafilename_now); // also delete captcha file because new one was created
+      $msgClass = 'alert-danger';
+      $msgCAPTCHA = "Your CAPTCHA was written wrong, please correct it and resend.";
+    };
+
+    if(!empty($u_name) && !empty($email) && !empty($u_pass_1) && !empty($u_pass_2) && ($u_pass_1 = $u_pass_2) && $verified_human_by_CAPTCHA) {
      // make sure that username is available and is not registered for someone else
+     //debug echo "veriefied human";
      $sql = "SELECT * FROM bazaar_user WHERE username = "."'$u_name'" ;
      $data = mysqli_query($dbc, $sql);   
  
@@ -108,16 +141,32 @@ if(isset($_POST['submit'])) {
                 <legend> Please register for Bazaar membership <legend>
                     <label>Username:</label>
                     <input type="text" onfocus="this.value='<?php echo isset($_POST['u_name']) ? $u_name : ''; ?>'" name="u_name" class="form-control" value="<?php echo isset($_POST['u_name']) ? $u_name : 'Login name'; ?>">
-
+                    <br>
                     <label>e-mail:</label>
-                    <input type="text" onfocus="this.value='<?php echo isset($_POST['email']) ? $email : ''; ?>'" name="email" class="form-control" value="<?php echo isset($_POST['email']) ? $email : '@'; ?>">
+                    <input type="text" onfocus="this.value='<?php echo isset($_POST['email']) ? $email : '@'; ?>'" name="email" class="form-control" value="<?php echo isset($_POST['email']) ? $email : '@'; ?>">
 
-
+                    <br>
                     <label>Password:</label>
                     <input type="password" onfocus="this.value='<?php echo isset($_POST['u_pass_1']) ? '' : ''; ?>'" name="u_pass_1" class="form-control" value="<?php echo isset($_POST['u_pass_1']) ? '' : ''; ?>">
-
+                    <br>
                     <label>Password:</label>
                     <input type="password" onfocus="this.value='<?php echo isset($_POST['u_pass_2']) ? '' : ''; ?>'" name="u_pass_2" class="form-control" value="<?php echo isset($_POST['u_pass_2']) ? '' : ''; ?>">
+                    <br>
+                    <label for="verify">Verification - enter text from image below:</label>
+                    <input type="text" onfocus="this.value='<?php echo isset($_POST['verify']) ? '' : ''; ?>'" name="verify" class="form-control" value="<?php echo isset($_POST['verify']) ? '' : 'Enter the CAPTCHA verify code'; ?>">
+                    <br>
+
+                    <?php if(($verified_human_by_CAPTCHA == 0) ): //error messaging if wrong CAPTCHA?>
+                    <br> 
+                    <div class="alert <?php echo $msgClass; ?>"><?php echo $msgCAPTCHA; ?></div>
+                    <?php endif; ?>	
+
+                    <center> <img src="<?php echo $imageCaptchafilename ; ?>" alt="Verification pass-phrase" > </center> 
+                    <!-- ass a hidden is sent sha actualy generated captcha pass-phrase only this way it is producet in same run -->
+                    <input type="hidden" name="pass_phrase_now" value="<?php echo sha1($pass_phrase); ?>" />
+                    <!-- as a hidden is sentname of captcha file for deletion after use -->
+                    <input type="hidden" name="imageCaptchafilename_now" value="<?php echo $imageCaptchafilename; ?>" />
+
             </div>
            <input id="loginsubmitt" type="submit" name="submit" class="btn btn-info" value="Sign In"> 
            <br>
