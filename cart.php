@@ -38,6 +38,7 @@
 	$screenshot3 = "";
     $item_description = '';
 	$is_result = false; //before hitting submit button no result is available
+	$cart_was_submitted = false;
 	
 
 
@@ -45,6 +46,8 @@
 	if(filter_has_var(INPUT_POST, 'submit')) {
 		// Data obtained from $_postmessage are assigned to local variables
 		if($_POST['confirm'] == 'Yes' ){ // if yuser selected YES and hit Buy button on below of the page
+			// cart wass submitted to buy, then message user about buy in item part of cart page
+			$cart_was_submitted = true;
 			//read all data from $_POST array
 			$users_id = htmlspecialchars($_POST['users_id']);
             /***********************************************************
@@ -76,11 +79,14 @@
 					
 					// Free result set
 					mysqli_free_result($output);
-				} else{
+				} else {
 					echo "No info about buyer obtained."; // if no records in table
+					$cart_was_submitted = false; // items cann not be bought by technical issue
 				}
-			} else{
+			} else {
 				echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
+				$cart_was_submitted = false; // items cann not be bought by technical issue
+
 			};
 			
 			 /****************************************************************************************
@@ -96,6 +102,16 @@
 							$name_of_item = $row['name_of_item'];
 							$price_eur = $row['price_eur'];
 							$users_id_of_seller = $row['users_id'];
+							 /****************************************************************************************
+							 *   if item with item_ide was bought, tgen set cart_number to -1 and published to -1 - mean sold
+							 */
+							 // update cart_number and published to -1 sold
+
+							$sql_update = "UPDATE bazaar_item SET cart_number = '-1', published = '-1' WHERE item_id = $item_id LIMIT 1";
+							// execute SQL
+							mysqli_query($dbc, $sql_update);
+
+
 							
                              /****************************************************************************************
 							 *   sent info to seler item by item in the buyer cart
@@ -171,10 +187,10 @@
 									
 									// Free result set
 									mysqli_free_result($output);
-								} else{
+								} else {
 									echo "No info about buyer obtained."; // if no records in table
 								}
-							} else{
+							} else {
 								echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
 							};
 
@@ -259,6 +275,14 @@
 		?>
 		<br>
 	  </h4>
+      <?php
+	  //messaging about succesfully commited item for buy, in this case no item is deisplayed
+	  if ($cart_was_submitted) {
+		  echo '<h5 class="alert alert-success"> Content of your cart has been scuccesfully submited to buy. For return on main bazaar page
+		        clik <a href="index.php">here<a>.</h5>';
+	  }
+
+	  ?>
 
 	  <!-- Showing content of the cart of appropriate user with items marked with users_id in filed cart_number -->
 	  <?php 
@@ -361,7 +385,12 @@
 					// Free result set
 					mysqli_free_result($output);
 				} else{
-					echo "There is no item for sell. Please add one."; // if no records in table
+					if ($cart_was_submitted) {
+						echo '<h5>For further buy please return on main page <a href="index.php">here</a>.</h5>';
+					} else {
+					    echo '<h5 class="alert alert-warning"> There is no item to buy. For further shopping please return on main bazaar page
+						clik <a href="index.php">here<a>.</h5>'; // if no records in table
+				    }; 
 				}
 			} else{
 				echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem

@@ -196,11 +196,13 @@ echo "<br>"; echo "<br>";
                 echo "<tr>";
                     echo "<td>" . $row['item_id'] . "</td>";
                     echo "<td>" . $row['name_of_item'] . "</td>";
-                    if ($row['published']) { // show if published - set 1 or waiting set to 0
-                        echo "<td> ok-Published </td>";
-                    } else {
-                        echo "<td> X-waiting </td>";
-                    }
+                    if ($row['published']==1) { // show if published - set 1 or waiting set to 0
+                        echo '<td><span class="green"> ok-Published </spann></td>';
+                    } else if ($row['published']== 0){ // 1 published, 0 unpublished, -1 sold ready for deletion
+                        echo '<td><span class="gray"> X-waiting </spann></td>';
+                    } else if ($row['published']== -1){ // 1 published, 0 unpublished, -1 sold ready for deletion
+                        echo '<td><span class="red"> sold - can be deleted! </spann></td>';
+                    } 
                     
                     echo "<td>" . $row['item_add_date'] . "</td>";
 

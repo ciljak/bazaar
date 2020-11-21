@@ -5,8 +5,8 @@
 <!-- ******************************************************************* -->
 <?php
    $_user_id = $_SESSION['users_id'];
-   $_number_of_items_in_cart ="";
-   $_total_price ="";
+   $_number_of_items_in_cart ="-";
+   $_total_price ="0";
 
    /*********************************************************
     * Count mumber of items in cart and total item price
@@ -51,7 +51,7 @@
 					// Free result set
 					mysqli_free_result($output);
 				} else{
-					echo "There is no item for sell. Please add one."; // if no records in table
+					echo "There is no item for buy. Please add one."; // if no records in table
 				}
 			} else{
 				echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
