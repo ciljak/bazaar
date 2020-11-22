@@ -50,10 +50,10 @@
 
 					// Free result set
 					mysqli_free_result($output);
-				} else{
-					echo "There is no item for buy. Please add one."; // if no records in table
+				} else {
+					echo ""; // if no records in table
 				}
-			} else{
+			} else {
 				echo "ERROR: Could not able to execute $sql. " . mysqli_error($dbc); // if database query problem
 			}
 

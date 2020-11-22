@@ -110,9 +110,12 @@
 	
 </head>
 <body>
-	<nav class="navbar navbar-default">
-      <div class="container">
-        <div class="navbar-header">    
+	<nav class="navbar ">
+      <div class="container" id="header_container_580">
+        <div class="navbar-header">  
+          <?php
+             require_once('headerlogo.php');
+          ?>  
           <a class="navbar-brand" href="index.php">Bazaar - Login page</a>
         </div>
       </div>
@@ -179,9 +182,10 @@
           
 		
 		
-<div class="footer"> 
-   <a class="navbar-brand" href="https://cdesigner.eu"> Visit us on CDesigner.eu </a>
- </div>
+      <?php  // footer include code
+          require_once('footer.php'); // including footer
+          generate_footer(580); // function from footer.php for seting width, you can use 580 and 1060px width
+        ?>  
  
 
 </body>

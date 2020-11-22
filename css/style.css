@@ -4,7 +4,8 @@
 
 .navbar  {
     background-color: #468c00;
-    margin-bottom: 25px ;
+    /* margin-bottom: 25px ; */
+    padding: 0px;
    
 }
 
@@ -33,6 +34,74 @@
   margin-left: 240px;
   border: dotted 1px gray;
   background-color: #cfffc6;
+
+}
+
+#header_container_1060 { /* wider header container for admin page or where it is needed */
+  width: 1060px;
+  margin-left: 240px;
+  border: dotted 1px gray;
+  background-color: #363636;
+  padding: 10px 10px 10px 10px;
+ /* background-image: url('../images/bazaar.png');
+  background-repeat: no-repeat;
+   background-attachment: fixed;
+  background-position: center; */
+  
+
+}
+#header_container_580 { /* wider header container for admin page or where it is needed */
+  width: 580px;
+  margin-left: 240px;
+  border: dotted 1px gray;
+  background-color: #363636;
+  padding: 10px 10px 10px 10px;
+ /* background-image: url('../images/bazaar.png');
+  background-repeat: no-repeat;
+   background-attachment: fixed;
+  background-position: center; */
+  
+
+}
+
+#footer_container_1060 { /* wider header container for admin page or where it is needed */
+  width: 1060px;
+  margin-left: 240px;
+  border: dotted 1px gray;
+  background-color: #363636;
+  padding: 10px 10px 10px 10px;
+ /* background-image: url('../images/bazaar.png');
+  background-repeat: no-repeat;
+   background-attachment: fixed;
+  background-position: center; */
+  padding-bottom: 240px;
+    margin-bottom: -240px;
+  
+
+}
+
+#footer_container_580 { /* wider header container for admin page or where it is needed */
+  width: 580px;
+  margin-left: 240px;
+  border: dotted 1px gray;
+  background-color: #363636;
+  padding: 10px 10px 10px 10px;
+ /* background-image: url('../images/bazaar.png');
+  background-repeat: no-repeat;
+   background-attachment: fixed;
+  background-position: center; */
+  padding-bottom: 240px;
+    margin-bottom: -240px;
+  
+
+}
+
+#headerlogo { /* header logo */
+  width: 560px;
+  padding: 0px 20px 0px 0px;
+  
+  
+  
 
 }
 
@@ -69,8 +138,8 @@ label {
 
 .footer {
     background-color: #468c00;
-    margin-top: 25px;
-    padding-left: 15px;
+    /*margin-top: 25px; */
+    /*padding-left: 15px;*/
     height: auto;
     clear: both;
     padding-bottom: 32000px;

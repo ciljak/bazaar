@@ -195,26 +195,11 @@
 	
 </head>
 <body>
-	<nav class="navbar navbar-default">
-      <div class="container">
+	<nav class="navbar ">
+      <div class="container" id="header_container_580">
         <div class="navbar-header">    
-		<?php // generate menu if user is loged in or not
-		 // old solution with cookies if(isset($_COOKIE['username'])) { // loged in user
-			if(isset($_SESSION['username'])) { // loged in user
-				echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
-				echo '<a class="navbar-brand" href="editprofile.php"> Edit profile </a>';
-				echo '<a class="navbar-brand" href="logout.php"> Logout ' .$_SESSION['username'] .'</a>';
-				if(isset($_SESSION['user_role'])=='admin') {
-				   echo '<a class="navbar-brand" href="admin.php"> Manage your page </a>';
-			   };
-			   require_once('sell_icon.php'); // graphic menu item for selling your items
-			   require_once('cart_icon.php'); // small cart icon in menu
-			 } else { // visitor without login
-			   echo '<a class="navbar-brand" href="login.php"> Log In </a>';
-			   echo '<a class="navbar-brand" href="signup.php"> Sign Up for better membership! </a>';
-   
-			   echo '<a class="navbar-brand" href="index.php">Bazaar - best items for a best prices!</a>';
-			}
+		<?php 
+		   require_once('headermenu.php');
 		?>	 
         </div>
       </div>
@@ -466,7 +451,8 @@ echo "<br>"; echo "<br>";
                 echo "</tr>";
                 echo " </div> " ;
             }
-            echo "</table>";
+			echo "</table>";
+			echo "<br />";
             // Free result set
             mysqli_free_result($output);
         } else{
@@ -505,9 +491,10 @@ mysqli_close($dbc);
           
 		
 		
-	   <div class="footer"> 
-          <a class="navbar-brand" href="https://cdesigner.eu"> Visit us on CDesigner.eu </a>
-		</div>
+		<?php  // footer include code
+			require_once('footer.php'); // including footer
+			generate_footer(580); // function from footer.php for seting width, you can use 580 and 1060px width
+        ?>  
 		
       
 </body>
