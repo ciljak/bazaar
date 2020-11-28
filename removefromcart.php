@@ -51,8 +51,8 @@
           <?php
              require_once('headerlogo.php');
           ?>  
-          <a class="navbar-brand" href="cart.php">Return to your shopping car</a>
-          <a class="navbar-brand" href="index.php"> --> return to main shop page</a>
+          <a class="navbar-brand" href="cart.php">Return to your shopping cart</a>
+          <a class="navbar-brand" href="index.php"><img id="next" src="./images/next_icon.png"> return to main shop page</a>
         </div>
       </div>
     </nav>

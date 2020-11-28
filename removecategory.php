@@ -48,8 +48,8 @@
           <?php
              require_once('headerlogo.php');
           ?>    
-          <a class="navbar-brand" href="managecategory.php">Bazaar category manager - part for Bazaar category management</a>
-          <a class="navbar-brand" href="index.php"> --> return to main shop page</a>
+          <a class="navbar-brand" href="managecategory.php"><img id="next" src="./images/category_icon.png"> Bazaar category manager - part for Bazaar category management</a>
+          <a class="navbar-brand" href="index.php"><img id="next" src="./images/next_icon.png"> return to main shop page</a>
         </div>
       </div>
     </nav>
@@ -143,7 +143,7 @@
                 
         };
         echo '<br><br>';
-        echo  '<p> <a href = "managecategory.php"> &lt;&lt Back to category management page. </a></p>';
+        echo  '<p> <a href = "managecategory.php"><img id="next" src="./images/previous_icon.png"> Back to category management page. </a></p>';
 
 ?>
 	  

@@ -49,8 +49,8 @@
           <?php
              require_once('headerlogo.php');
           ?> 
-          <a class="navbar-brand" href="admin.php"> --> Bazaar admin page</a>
-          <a class="navbar-brand" href="index.php"> --> return to main shop page</a>
+          <a class="navbar-brand" href="admin.php"><img id="next" src="./images/next_icon.png"> Bazaar admin page</a>
+          <a class="navbar-brand" href="index.php"><img id="next" src="./images/next_icon.png">  Return to main shop page</a>
         </div>
       </div>
     </nav>
@@ -213,7 +213,7 @@
                 
         };
         echo '<br><br>';
-        echo  '<p> <a href = "admin.php"> &lt;&lt Back to admin  page. </a></p>';
+        echo  '<p> <a href = "admin.php"><img id="next" src="./images/previous_icon.png"> Back to admin  page. </a></p>';
 
 ?>
 	  

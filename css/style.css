@@ -9,8 +9,25 @@
    
 }
 
+body  {
+  background-image: url('../images/background.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  
+ 
+}
+
+
+
 .navbar-brand {
    color: white;
+}
+
+#menu {
+  background-color: rgb(41, 41, 41);
+  padding: 5px;
+  margin-bottom: 10px;
 }
 
 /* set midle container to width 580px */
@@ -344,6 +361,12 @@ th { /* header of table */
   
 
 }
+#username { /* icon leading to ling for opening dialog in remove or other pages */
+  color: #468c00;
+  font-size:18px;
+    font-weight: bold;
+ 
+}
 
 /* ************************************************ */
 /*                  Center image                    */
@@ -375,5 +398,32 @@ th { /* header of table */
   padding-bottom: 15px;
   background-color: rgb(255, 255, 255) ;
   
+}
+
+/* ************************************************ */
+/*        Formating of arrow ordering images        */
+/* ************************************************ */
+#arrow { /* up and down order arrows in table logo */
+  width: 20px;
+  padding: 2px;
+ 
+}
+
+#next { /* icon leading to ling for opening dialog in remove or other pages */
+  width: 40px;
+  padding: 2px;
+ 
+}
+
+#cartadd { /* icon leading to ling for opening dialog in remove or other pages */
+  width: 100px;
+  padding: 5px;
+ 
+}
+
+#menuimage { /* icon leading to ling for opening dialog in remove or other pages */
+  width: 40px;
+  padding: 5px;
+ 
 }
 

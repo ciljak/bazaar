@@ -245,7 +245,7 @@ echo "<br>"; echo "<br>";
 						 echo '<td colspan="1"><a id="DEL" href="removeitem.php?item_id='.$row['item_id'] . '&amp;name_of_item='
                          . $row['name_of_item'] . '&amp;price_eur='. $row['price_eur'] .
                          '&amp;published='. $row['published'] . '&amp;screenshot1='. $row['screenshot1'] .
-                         '&amp;screenshot2='. $row['screenshot2'] . '&amp;screenshot3='. $row['screenshot3'] . '"> >>Publish/UnPub./Remove  </a></td></tr>'; //construction of GETable link
+                         '&amp;screenshot2='. $row['screenshot2'] . '&amp;screenshot3='. $row['screenshot3'] . '"><img id="next" src="./images/pubunpubremove.png"> </a></td></tr>'; //construction of GETable link
 						 // for removecategory.php input
 					
                     
@@ -262,10 +262,12 @@ echo "<br>"; echo "<br>";
 										//generate navigational page links if we have more than one page
 										
 										if($num_pages_2 > 1) {
-											$user_search = ""; // not implemented yet, then set as clear values
-											$sort = "";
+                                            $user_search = ""; // not implemented yet, then set as clear values
+                                            $sort_by = "";
+                                            $order = "";
 											// included function for pagination generation function stored in functions.php page
-											echo generate_page_links($user_search, $sort, $cur_page, $num_pages_2);
+                                            echo generate_page_links($user_search, $sort_by, $order, $cur_page, $num_pages_2);
+                                           
                                             echo "<br><br>";
                                              }
             echo "<br>";

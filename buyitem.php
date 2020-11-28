@@ -49,7 +49,7 @@
           <?php
              require_once('headerlogo.php');
           ?>
-          <a class="navbar-brand" href="index.php"> --> return to main bazaar page</a>
+          <a class="navbar-brand" href="index.php">Return to main bazaar page <img id="next" src="./images/next_icon.png"></a>
         </div>
       </div>
     </nav>
@@ -374,7 +374,7 @@
         };
 
         echo '<br><br>';
-        echo  '<p> <a href = "index.php"> &lt;&lt Back to main Bazaar  page. </a></p>';
+        echo  '<p> <a href = "index.php"> <img id="next" src="./images/previous_icon.png"> Back to main Bazaar  page. </a></p>';
 
 ?>
 	  

@@ -51,8 +51,8 @@
         <?php 
           require_once('headermenu.php');
 		?>	 
-
-         <a class="navbar-brand" href="index.php"> --> return to main shop page</a>
+         <br />
+         <a class="navbar-brand" href="index.php"> Return to main shop page <img id="next" src="./images/next_icon.png"></a>
         </div>
       </div>
     </nav>
@@ -257,7 +257,7 @@
                                     };
                                      
                                     // echo "<td  colspan=\"1\"> Manage entry: </td>"; // description on first line
-                                         echo '<td colspan="1"><a id="DEL" href="buyitem.php?item_id='.$row['item_id'].  '"> >> Buy this item ...  </a></td></tr>'; //construction of GETable link
+                                         echo '<td colspan="1"><a id="DEL" href="buyitem.php?item_id='.$row['item_id'].  '"> <img id="cartadd" src="./images/cartadd.png">  </a></td></tr>'; //construction of GETable link
                                          // for removecategory.php input
                                     
                                     
@@ -307,7 +307,7 @@
         };
 
         echo '<br><br>';
-        echo  '<p> <a href = "index.php"> &lt;&lt Back to main Bazaar  page. </a></p>';
+        echo  '<p><a href = "index.php"><img id="next" src="./images/previous_icon.png"> Back to main Bazaar  page. </a></p>';
 
 ?>
 	  
