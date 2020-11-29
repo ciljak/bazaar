@@ -130,6 +130,7 @@
             
 
             echo '<form method="POST" action="removecategory.php">';   //not self but direct this script removecategory.php - we dont want include any GET data tahat previously send
+            echo '<center>';
             echo '<input type="radio" name="confirm" value="Yes" /> Yes   '; 
             echo '<input type="radio" name="confirm" value="No" checked="checked" /> No <br><br>';  
             
@@ -137,6 +138,7 @@
             echo '<input type="hidden"  name="category" value="'.$category.'"  />';
             echo '<input type="hidden" name="subcategory" value="'.$subcategory.'" />'; 
             echo '<input type="submit" class="btn btn-danger" value="submit" name="submit" />'; 
+            echo '</center>'; 
             echo '</form>'; 
 
 

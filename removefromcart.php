@@ -51,7 +51,7 @@
           <?php
              require_once('headerlogo.php');
           ?>  
-          <a class="navbar-brand" href="cart.php">Return to your shopping cart</a>
+          <a class="navbar-brand" href="cart.php"><img id="next" src="./images/cart.png"> Return to your shopping cart</a>
           <a class="navbar-brand" href="index.php"><img id="next" src="./images/next_icon.png"> return to main shop page</a>
         </div>
       </div>
@@ -135,6 +135,8 @@
             
 
             echo '<form method="POST" action="removefromcart.php">';   //not self but direct this script removecategory.php - we dont want include any GET data tahat previously send
+
+            echo '<center>';
             echo '<input type="radio" name="confirm" value="Yes" /> Yes   '; 
             echo '<input type="radio" name="confirm" value="No" checked="checked" /> No <br><br>';  
             
@@ -142,13 +144,14 @@
             echo '<input type="hidden"  name="item_id" value="'.$item_id.'"  />';
             echo '<input type="hidden" name="name_of_item" value="'.$name_of_item.'" />'; 
             echo '<input type="submit" class="btn btn-danger" value="submit" name="submit" />'; 
+            echo '</center>'; 
             echo '</form>'; 
 
 
                 
         };
         echo '<br><br>';
-        echo  '<p> <a href = "cart.php"> &lt;&lt Back to your cart. </a></p>';
+        echo  '<p> <a href = "cart.php"><img id="next" src="./images/previous_icon.png"> Back to your cart. </a></p>';
 
 ?>
 	  

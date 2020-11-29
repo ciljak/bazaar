@@ -307,7 +307,7 @@
 							echo "<th>Price</th>";
 							echo "<th>Category</th>";
 							echo "<th>Screenshot1</th>";
-							echo "<th>More info</th>";
+							echo "<th>Remove from cart</th>";
 							
 							
 						echo "</tr>";
@@ -358,7 +358,7 @@
 							
 								$image_location = IMAGE_PATH.$row['screenshot1'];
 							echo "<td id=\"gray_under_picture\"> <img  src=\"$image_location\" alt=\" screenshot of product primary \"  height=\"250\"> </td>"; 
-							echo '<td colspan="1"><a id="DEL" href="removefromcart.php?cart_number='.$row['cart_number']. '&amp;item_id='. $row['item_id'] . '&amp;name_of_item='. $row['name_of_item'] .'"> >> Remove from cart  </a></td></tr>'; //construction of GETable link
+							echo '<td colspan="1"><a id="DEL" href="removefromcart.php?cart_number='.$row['cart_number']. '&amp;item_id='. $row['item_id'] . '&amp;name_of_item='. $row['name_of_item'] .'"> <img id="cartadd" src="./images/cartdel.png"> </a></td></tr>'; //construction of GETable link
 						echo "</tr>";
 						echo " </div> " ;
 					}

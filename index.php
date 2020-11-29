@@ -308,8 +308,8 @@
 					$sql ="SELECT * FROM bazaar_item WHERE published="."'1'"." AND subcategory_id = "."'$subcategory_id'"." AND cart_number="."'0'"." ORDER BY item_id DESC";  // read in reverse order of score - highest score first
 					$output_for_number_rows_count_2 = mysqli_query($dbc, $sql); // query database
 					$total_2 = mysqli_num_rows($output_for_number_rows_count_2);	//get number of rows in databse	
-					echo "skip".$skip;
-					echo "results per page".$results_per_page;								
+					//echo "skip".$skip;
+					//echo "results per page".$results_per_page;								
 										
 							// read all rows (data) from guestbook table in "test" database
 							$sql = "SELECT * FROM bazaar_item WHERE published="."'1'"." AND subcategory_id = "."'$subcategory_id'"." AND cart_number="."'0'"." ORDER BY item_id DESC LIMIT $skip, $results_per_page";  // read in reverse order of score - highest score first
@@ -359,11 +359,17 @@
 										
 										//generate navigational page links if we have more than one page
 										
-										if($num_pages_2 > 1) {
+										if($num_pages > 1) {
 											$user_search = ""; // not implemented yet, then set as clear values
-											$sort = "";
+											if(empty($sort_by)) { // if not obtained by get then default order is applied
+												$sort_by="default";
+											};
+											if(empty($order)) { // if not obtained by get then default order is applied
+												$order="1";
+											};
+											
 											// included function for pagination generation function stored in functions.php page
-											echo generate_page_links($user_search, $sort, $cur_page, $num_pages_2);
+											echo generate_page_links($user_search, $sort_by, $order, $cur_page, $num_pages);
 											echo "<br><br>";
 										}
 										// Free result set

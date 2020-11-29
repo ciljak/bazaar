@@ -1,7 +1,7 @@
 <!-- ***************************************************************************** -->
-<!-- PHP "self" code GET request for remove andable or disable product item        -->
+<!-- PHP "self" code GET request for user management                               -->
 <!-- ***************************************************************************** -->
-<!-- Vrsion: 1.0        Date: 18.10.2020 by CDesigner.eu                           -->
+<!-- Vrsion: 1.0        Date: 29.111.2020 by CDesigner.eu                           -->
 <!-- ***************************************************************************** -->
 
 <?php // leading part of page for simple header securing and basic variable setup
@@ -35,7 +35,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Bazaar score - publish/unpublish/remove item script </title>
+	<title> Bazaar user - update/delete/remove userscript </title>
 	<link rel="stylesheet" href="./css/bootstrap.min.css"> <!-- bootstrap mini.css file -->
 	<link rel="stylesheet" href="./css/style.css"> <!-- my local.css file -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
@@ -64,9 +64,14 @@
       <br> <!-- logo on the center of the page -->
       <h4>Please select what you will do.</h4>
       <br>
+      
+      <br> <!-- remove after finalize page -->
+        <img id="calcimage" src="./images/workinprogress.png" alt="admin image" width="150" height="150">
+      <br>
+
 
       <br> <!-- logo on the center of the page -->
-        <img id="calcimage" src="./images/admin.png" alt="admin image" width="150" height="150">
+        <img id="calcimage" src="./images/default_avatar.png" alt="admin image" width="150" height="150">
       <br>
 
        
@@ -183,10 +188,9 @@
             
 
             echo '<form method="POST" action="removeitem.php">';   //not self but direct this script removecategory.php - we dont want include any GET data tahat previously send
-            echo '<br><br>';
             echo '<h4> Please select your operation </h4>';
 
-            echo '<input class="form-control" list="operation" name="operation" placeholder="select" >';
+            echo '<input list="operation" name="operation" placeholder="select" >';
             echo '<datalist id="operation">';
             echo '<option value="publish">';
             echo '<option value="unpublish">';
@@ -196,11 +200,9 @@
 
             echo '<br><br>';
 
-            echo '<center>';
-            echo '<input class="form-check-inline" type="radio" name="confirm" value="Yes" /> Yes   '; 
-            echo '<br>';
-            echo '<input class="form-check-inline" type="radio" name="confirm" value="No" checked="checked" /> No <br><br>';  
-            echo '</center>';
+            
+            echo '<input type="radio" name="confirm" value="Yes" /> Yes   '; 
+            echo '<input type="radio" name="confirm" value="No" checked="checked" /> No <br><br>';  
             
             echo '<input type="hidden" name="item_id" value="'.$item_id.'"  />'; 
             echo '<input type="hidden" name="price_eur" value="'.$price_eur.'"  />';
@@ -209,10 +211,7 @@
             echo '<input type="hidden" name="screenshot1" value="'.$screenshot1.'" />'; 
             echo '<input type="hidden" name="screenshot2" value="'.$screenshot2.'" />'; 
             echo '<input type="hidden" name="screenshot3" value="'.$screenshot3.'" />'; 
-
-            echo '<center>';
             echo '<input type="submit" class="btn btn-danger" value="submit" name="submit" />'; 
-            echo '</center>';
             echo '</form>'; 
 
 
