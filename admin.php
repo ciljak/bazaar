@@ -96,9 +96,7 @@
 						echo " <table class=\"table table-success\"> ";
 						echo " <tr>
                                <td><h5> <em> Category: </em> $category with subcategory $subcategory </h5> <h5> has been succesfully added to category list </h5> ";
-                                  
-						
-						  
+                         
 						echo "	   <td>   </tr> "; 
 						echo " </table> ";
 					

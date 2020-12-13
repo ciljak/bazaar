@@ -1,0 +1,4 @@
+What to do on next training seassion:
+
+- further testing manageuserdata.php page - page where admin can adjust settings of selected user account
+- work on functionality for reset password and resend new one user defined e-mail (stored in database from time of registration)

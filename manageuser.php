@@ -64,11 +64,11 @@
       <br> <!-- logo on the center of the page -->
       <h4>Please select what you will do.</h4>
       <br>
-      
-      <br> <!-- remove after finalize page -->
+      <!-- remove after finalize page 
+      <br> 
         <img id="calcimage" src="./images/workinprogress.png" alt="admin image" width="150" height="150">
       <br>
-
+      -->
 
       <br> <!-- logo on the center of the page -->
         <img id="calcimage" src="./images/default_avatar.png" alt="admin image" width="150" height="150">
@@ -161,7 +161,8 @@
 
 
              
-
+              // conect to the database
+              $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PW, DB_NAME);
 
              
 
@@ -172,15 +173,32 @@
                     // execute SQL
                     mysqli_query($dbc, $sql);
                     // confirm executed command
-                    echo '<p> User <strong>' . $username . '</strong> with id <strong>' . $users_id . '</strong> was succesfully promoted as page admin. </p>';
+                    echo '<p> User <strong>' . $username . '</strong> with id <strong>' . $users_id . '</strong> was succesfully promoted as page <b>admin<b>. </p>';
                     break;
+                case "make_user":
+                  $sql = "UPDATE bazaar_user SET user_role = 'user' WHERE users_id = $users_id LIMIT 1";
+                  // execute SQL
+                  mysqli_query($dbc, $sql);
+                  // confirm executed command
+                  echo '<p> User <strong>' . $username . '</strong> with id <strong>' . $users_id . '</strong> was succesfully promoted as page <b>user<b>. </p>';
+                  break;     
   /* to do */  case "change_user_data": // --> make solution for update other users data - link profile page for another user
-                    $sql = "UPDATE bazaar_item SET published = '0' WHERE item_id = $item_id LIMIT 1";
-                    // execute SQL
-                    mysqli_query($dbc, $sql);
-                    // confirm executed command
-                    echo '<p> The item <strong>' . $name_of_item . '</strong> with id <strong>' . $item_id . '</strong> was succesfully unpublished. </p>';
-                    // --> here are displyed actualized users data
+
+                    // next part of code redirect to manageuserdata.php page for administration of appropriate users data by admin
+                    
+                    ?>
+                       <script type = "text/javascript">
+                          
+                              function Redirect() {
+                                window.location = "./manageuserdata.php?users_id=<?php echo $users_id ?>&username=<?php echo $username ?>"; // send users_id of user to edit must send to manageuserdata.php to be able edit appropriate user and not user extracted from session informatin
+                              }            
+                              document.write("You will be redirected to manageuserdata.php page.");
+                              setTimeout('Redirect()', 0);
+                          
+                      </script>
+
+                    <?php
+                    
 
                     break;
                 case "delete_user":
@@ -188,7 +206,7 @@
                     // execute SQL
                     mysqli_query($dbc, $sql);
                     // confirm executed command
-                    echo '<p> The user <strong>' . $username . '</strong> with id <strong>' . $users_id . '</strong> was succesfully deleted from list of users. </p>';
+                    echo '<p> The user <strong>' . $username . '</strong> with id <strong>' . $users_id . '</strong> was succesfully <b>deleted<b> from list of users. </p>';
                     @unlink(IMAGE_PATH . $avatar); //delete image file
                  
                     break;
@@ -215,17 +233,19 @@
                  
                            
                  '</p>'; 
-        echo " <img src=\"$image_location\" alt=\" score image \"  height=\"150\"> ";
+            echo " <center><img src=\"$image_location\" alt=\" score image \"  height=\"150\"> </center>";
+            echo '<br>';
               
             //generating removing confirmation form      
             
 
-            echo '<form method="POST" action="removeitem.php">';   //not self but direct this script removecategory.php - we dont want include any GET data tahat previously send
+            echo '<form method="POST" action="manageuser.php">';   //not self but direct this script removecategory.php - we dont want include any GET data tahat previously send
             echo '<h4> Please select your operation </h4>';
 
-            echo '<input list="operation" name="operation" placeholder="select" >';
+            echo '<center><input list="operation" name="operation" placeholder="click to select option" ><center>';
             echo '<datalist id="operation">';
             echo '<option value="make_admin">';
+            echo '<option value="make_user">';
             echo '<option value="change_user_data">';
             echo '<option value="delete_user">';
             echo '</datalist>';
@@ -234,17 +254,15 @@
             echo '<br><br>';
 
             
-            echo '<input type="radio" name="confirm" value="Yes" /> Yes   '; 
-            echo '<input type="radio" name="confirm" value="No" checked="checked" /> No <br><br>';  
+            echo '<center><input type="radio" name="confirm" value="Yes" /> Yes   '; 
+            echo '<input type="radio" name="confirm" value="No" checked="checked" /> No <center><br><br>';  
             
-            echo '<input type="hidden" name="item_id" value="'.$item_id.'"  />'; 
-            echo '<input type="hidden" name="price_eur" value="'.$price_eur.'"  />';
-            echo '<input type="hidden" name="name_of_item" value="'.$name_of_item.'" />'; 
-            echo '<input type="hidden" name="published" value="'.$published.'" />'; 
-            echo '<input type="hidden" name="screenshot1" value="'.$screenshot1.'" />'; 
-            echo '<input type="hidden" name="screenshot2" value="'.$screenshot2.'" />'; 
-            echo '<input type="hidden" name="screenshot3" value="'.$screenshot3.'" />'; 
-            echo '<input type="submit" class="btn btn-danger" value="submit" name="submit" />'; 
+            // template for hiden value submitting echo '<input type="hidden" name="item_id" value="'.$item_id.'"  />';
+            echo '<input type="hidden" name="users_id" value="'.$users_id.'"  />'; 
+            echo '<input type="hidden" name="username" value="'.$username.'"  />'; 
+            echo '<input type="hidden" name="user_role" value="'.$user_role.'"  />'; 
+          
+            echo '<center><input type="submit" class="btn btn-danger" value="submit" name="submit" /></center>'; 
             echo '</form>'; 
 
 
