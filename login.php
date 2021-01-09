@@ -161,6 +161,11 @@
                     <input type="hidden" name="pass_phrase_now" value="<?php echo sha1($pass_phrase); ?>" />
                     <!-- as a hidden is sentname of captcha file for deletion after use -->
                     <input type="hidden" name="imageCaptchafilename_now" value="<?php echo $imageCaptchafilename; ?>" />
+
+                    <!-- redirecting to mage for reseting password -->
+                    <br>
+                    <p>I forgot my password - <a href="./resend.php">resend password. </a> </p>
+
             </div>
            <input id="loginsubmitt" type="submit" name="submit" class="btn btn-info" value="Log In"> 
            <br>
